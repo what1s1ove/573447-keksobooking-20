@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Vladislav Zubko](https://up.htmlacademy.ru/javascript/20/user/573447).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Казаков](https://htmlacademy.ru/profile/id343981).
 
 ---
 
