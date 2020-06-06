@@ -8,7 +8,6 @@ var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http:
 var LOCATION_COORDS_MIN = 130;
 var LOCATION_COORDS_MAX = 630;
 
-
 var getRandomNumber = function (min, max) {
   var randomNumber = Math.round(min - 0.5 + Math.random() * (max - min + 1));
 
@@ -74,6 +73,8 @@ var getOffers = function (count) {
   return offers;
 };
 
+var map = document.querySelector('.map');
+
 var offers = getOffers(OFFERS_COUNT);
 
-console.log(offers);
+map.classList.remove('map--faded');
