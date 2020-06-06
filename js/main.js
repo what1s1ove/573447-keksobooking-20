@@ -98,8 +98,8 @@ var getRandomItems = function (arr) {
 
 var getOffer = function (offerIdx) {
   var offerNumber = offerIdx + 1;
-  var offerLocationX = getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX) - PIN_SIZE.WIDTH / 2;
-  var offerLocationY = getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX) - PIN_SIZE.HEIGHT;
+  var offerLocationX = getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX);
+  var offerLocationY = getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX);
 
   var offer = {
     author: {
@@ -141,8 +141,11 @@ var getOffers = function (count) {
 var renderPin = function (pin, template) {
   var pinElement = template.cloneNode(true);
 
-  pinElement.style.left = pin.location.x + 'px';
-  pinElement.style.top = pin.location.y + 'px';
+  var pinCoordsX = pin.location.x - PIN_SIZE.WIDTH / 2;
+  var pinCoordsY = pin.location.y - PIN_SIZE.HEIGHT;
+
+  pinElement.style.left = pinCoordsX + 'px';
+  pinElement.style.top = pinCoordsY + 'px';
 
   pinElement.querySelector('img').src = pin.author.avatar;
   pinElement.querySelector('img').alt = pin.offer.title;
