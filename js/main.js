@@ -53,32 +53,34 @@ var OfferOptions = {
       MAX: 630
     }
   }
-}
+};
 
 var PIN_SIZE = {
   WIDTH: 50,
   HEIGHT: 70
 };
 
-var typesMap = {
+var OFFER_TYPES = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
   bungalo: 'Бунгало'
 };
 
-var offerTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var map = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');
+var pitTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var getShuffledArray = function(arr) {
-  var copyArray = arr.slice();
+var getShuffledArray = function (arr) {
+  var copiedArray = arr.slice();
 
-  var shuffledArray = copyArray.sort(function () {
+  var shuffledArray = copiedArray.sort(function () {
 
     return 0.5 - Math.random();
   });
 
-  return shuffledArray
-}
+  return shuffledArray;
+};
 
 var getRandomNumber = function (min, max) {
   var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -107,7 +109,7 @@ var getOffer = function (offerIdx) {
       title: 'Offer #' + offerNumber,
       address: offerLocationX + ', ' + offerLocationY,
       price: getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
-      type: OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)],
+      type: OFFER_TYPES[OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)]],
       rooms: 2,
       checkin: OfferOptions.CHECKINS[getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
       checkout: OfferOptions.CHECKOUTS[getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
@@ -136,20 +138,30 @@ var getOffers = function (count) {
   return offers;
 };
 
-var getCoords = function(location) {
-  const coords = location;
-}
+var renderPin = function (pin) {
+  var pinElement = pitTemplate.cloneNode(true);
 
-var renderOffer = function (offer) {
-  var offerElement = offerTemplate.cloneNode(true);
+  pinElement.style.left = pin.location.x + 'px';
+  pinElement.style.top = pin.location.y + 'px';
 
-  return offerElement;
+  pinElement.querySelector('img').src = pin.author.avatar;
+  pinElement.querySelector('img').alt = pin.offer.title;
+
+  return pinElement;
 };
 
-var map = document.querySelector('.map');
+var renderPins = function (offers) {
+  var fragment = document.createDocumentFragment();
+
+  offers.forEach(function (offer) {
+    fragment.appendChild(renderPin(offer));
+  });
+
+  mapPins.appendChild(fragment);
+};
 
 var offers = getOffers(OFFERS_COUNT);
 
-console.log(offers);
-
 map.classList.remove('map--faded');
+
+renderPins(offers);
