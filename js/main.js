@@ -69,7 +69,7 @@ var typesMap = {
 
 var map = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
-var pitTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var getShuffledArray = function (arr) {
   var copiedArray = arr.slice();
@@ -138,8 +138,8 @@ var getOffers = function (count) {
   return offers;
 };
 
-var renderPin = function (pin) {
-  var pinElement = pitTemplate.cloneNode(true);
+var renderPin = function (pin, template) {
+  var pinElement = template.cloneNode(true);
 
   pinElement.style.left = pin.location.x + 'px';
   pinElement.style.top = pin.location.y + 'px';
@@ -150,18 +150,22 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var renderPins = function (offers) {
+var renderPins = function (offers, container) {
   var fragment = document.createDocumentFragment();
 
   offers.forEach(function (offer) {
-    fragment.appendChild(renderPin(offer));
+    fragment.appendChild(renderPin(offer, pinTemplate));
   });
 
-  mapPins.appendChild(fragment);
+  container.appendChild(fragment);
+};
+
+var initMap = function (offers) {
+  map.classList.remove('map--faded');
+
+  renderPins(offers, mapPins);
 };
 
 var offers = getOffers(OFFERS_COUNT);
 
-map.classList.remove('map--faded');
-
-renderPins(offers);
+initMap(offers);
