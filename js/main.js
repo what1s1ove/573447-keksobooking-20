@@ -91,7 +91,7 @@ var getRandomNumber = function (min, max) {
 var getRandomItems = function (arr) {
   var randomIndex = getRandomNumber(0, arr.length);
 
-  var shuffledArray =  getShuffledArray(arr)
+  var shuffledArray = getShuffledArray(arr);
 
   return shuffledArray.splice(0, randomIndex);
 };
