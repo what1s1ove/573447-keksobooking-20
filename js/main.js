@@ -16,12 +16,9 @@ var getRandomNumber = function (min, max) {
 };
 
 var getRandomItem = function (arr) {
-  var min = 0;
-  var max = arr.length - 1;
+  var randomItem = arr[Math.floor(Math.random() * arr.length)];
 
-  var randomIndex = getRandomNumber(min, max);
-
-  return arr[randomIndex];
+  return randomItem;
 };
 
 var getRandomItems = function (arr) {
@@ -53,7 +50,7 @@ var getOffer = function (offerIdx) {
       checkin: getRandomItem(OFFER_CHECKS),
       checkout: getRandomItem(OFFER_CHECKS),
       features: getRandomItems(OFFER_FEATURES),
-      description: 'Simple description',
+      description: 'Simple description of offer #' + offerNumber,
       photos: getRandomItems(OFFER_PHOTOS),
     },
     location: {
