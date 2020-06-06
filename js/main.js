@@ -1,60 +1,123 @@
 'use strict';
 
 var OFFERS_COUNT = 8;
-var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
-var OFFER_CHECKS = ['12:00', '13:00', '14:00'];
-var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var LOCATION_COORDS_MIN = 130;
-var LOCATION_COORDS_MAX = 630;
+var OfferOptions = {
+  TYPES: [
+    'palace',
+    'flat',
+    'house',
+    'bungalo'
+  ],
+  CHECKINS: [
+    '12:00',
+    '13:00',
+    '14:00'
+  ],
+  CHECKOUTS: [
+    '12:00',
+    '13:00',
+    '14:00'
+  ],
+  FEATURES: [
+    'wifi',
+    'dishwasher',
+    'parking',
+    'washer',
+    'elevator',
+    'conditioner'
+  ],
+  PHOTOS: [
+    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+  ],
+  GUESTS: {
+    MIN: 1,
+    MAX: 15
+  },
+  ROOMS: {
+    MIN: 1,
+    MAX: 5
+  },
+  PRICE: {
+    MIN: 1000,
+    MAX: 1000000
+  },
+  LOCATION: {
+    X: {
+      MIN: 300,
+      MAX: 900
+    },
+    Y: {
+      MIN: 130,
+      MAX: 630
+    }
+  }
+}
 
-var getRandomNumber = function (min, max) {
-  var randomNumber = Math.round(min - 0.5 + Math.random() * (max - min + 1));
-
-  return randomNumber;
+var PIN_SIZE = {
+  WIDTH: 50,
+  HEIGHT: 70
 };
 
-var getRandomItem = function (arr) {
-  var randomItem = arr[Math.floor(Math.random() * arr.length)];
-
-  return randomItem;
+var typesMap = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
 };
 
-var getRandomItems = function (arr) {
-  var min = 0;
-  var max = arr.length - 1;
-  var shuffledArray = arr.slice().sort(function () {
+var offerTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var getShuffledArray = function(arr) {
+  var copyArray = arr.slice();
+
+  var shuffledArray = copyArray.sort(function () {
 
     return 0.5 - Math.random();
   });
 
-  var randomIndex = getRandomNumber(min, max);
+  return shuffledArray
+}
+
+var getRandomNumber = function (min, max) {
+  var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  return randomNumber;
+};
+
+var getRandomItems = function (arr) {
+  var randomIndex = getRandomNumber(0, arr.length);
+
+  var shuffledArray =  getShuffledArray(arr)
 
   return shuffledArray.splice(0, randomIndex);
 };
 
 var getOffer = function (offerIdx) {
   var offerNumber = offerIdx + 1;
+  var offerLocationX = getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX) - PIN_SIZE.WIDTH / 2;
+  var offerLocationY = getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX) - PIN_SIZE.HEIGHT;
 
   var offer = {
     author: {
-      avatar: 'img/avatars/user0' + offerNumber,
+      avatar: 'img/avatars/user' + (offerIdx < 10 ? '0' : '') + offerNumber + '.png',
     },
     offer: {
       title: 'Offer #' + offerNumber,
-      address: getRandomNumber(LOCATION_COORDS_MIN, LOCATION_COORDS_MAX) + ', ' + getRandomNumber(LOCATION_COORDS_MIN, LOCATION_COORDS_MAX),
-      price: 599,
-      type: getRandomItem(OFFER_TYPES),
+      address: offerLocationX + ', ' + offerLocationY,
+      price: getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
+      type: OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)],
       rooms: 2,
-      checkin: getRandomItem(OFFER_CHECKS),
-      checkout: getRandomItem(OFFER_CHECKS),
-      features: getRandomItems(OFFER_FEATURES),
+      checkin: OfferOptions.CHECKINS[getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
+      checkout: OfferOptions.CHECKOUTS[getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
+      features: getRandomItems(OfferOptions.FEATURES),
       description: 'Simple description of offer #' + offerNumber,
-      photos: getRandomItems(OFFER_PHOTOS),
+      photos: getRandomItems(OfferOptions.PHOTOS),
     },
     location: {
-      x: getRandomNumber(LOCATION_COORDS_MIN, LOCATION_COORDS_MAX),
-      y: getRandomNumber(LOCATION_COORDS_MIN, LOCATION_COORDS_MAX)
+      x: offerLocationX,
+      y: offerLocationY
     }
   };
 
@@ -73,8 +136,20 @@ var getOffers = function (count) {
   return offers;
 };
 
+var getCoords = function(location) {
+  const coords = location;
+}
+
+var renderOffer = function (offer) {
+  var offerElement = offerTemplate.cloneNode(true);
+
+  return offerElement;
+};
+
 var map = document.querySelector('.map');
 
 var offers = getOffers(OFFERS_COUNT);
+
+console.log(offers);
 
 map.classList.remove('map--faded');
