@@ -60,7 +60,7 @@ var PIN_SIZE = {
   HEIGHT: 70
 };
 
-var OFFER_TYPES = {
+var typesMap = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
@@ -109,7 +109,7 @@ var getOffer = function (offerIdx) {
       title: 'Offer #' + offerNumber,
       address: offerLocationX + ', ' + offerLocationY,
       price: getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
-      type: OFFER_TYPES[OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)]],
+      type: typesMap[OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)]],
       rooms: 2,
       checkin: OfferOptions.CHECKINS[getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
       checkout: OfferOptions.CHECKOUTS[getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
