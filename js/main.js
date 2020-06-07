@@ -60,7 +60,7 @@ var PIN_SIZE = {
   HEIGHT: 70
 };
 
-var typesMap = {
+var offerTypesMap = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
@@ -69,7 +69,12 @@ var typesMap = {
 
 var map = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapFilter = document.querySelector('.map__filters-container');
+var pinTemplate = document.querySelector('#pin').content;
+var pin = pinTemplate.querySelector('.map__pin')
+var popupOfferTemplate = document.querySelector('#card').content;
+var popupOffer = popupOfferTemplate.querySelector('.map__card');
+var popupOfferPhoto = popupOfferTemplate.querySelector('.popup__photo');
 
 var getShuffledArray = function (arr) {
   var copiedArray = arr.slice();
@@ -109,8 +114,9 @@ var getOffer = function (offerIdx) {
       title: 'Offer #' + offerNumber,
       address: offerLocationX + ', ' + offerLocationY,
       price: getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
-      type: typesMap[OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)]],
-      rooms: 2,
+      type: OfferOptions.TYPES[getRandomNumber(0, OfferOptions.TYPES.length - 1)],
+      guests: getRandomNumber(OfferOptions.GUESTS.MIN, OfferOptions.GUESTS.MAX),
+      rooms: getRandomNumber(OfferOptions.ROOMS.MIN, OfferOptions.ROOMS.MAX),
       checkin: OfferOptions.CHECKINS[getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
       checkout: OfferOptions.CHECKOUTS[getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
       features: getRandomItems(OfferOptions.FEATURES),
@@ -157,16 +163,76 @@ var renderPins = function (offers, container) {
   var fragment = document.createDocumentFragment();
 
   offers.forEach(function (offer) {
-    fragment.appendChild(renderPin(offer, pinTemplate));
+    fragment.appendChild(renderPin(offer, pin));
   });
 
   container.appendChild(fragment);
 };
 
+var getOfferAdFeatures = function (features) {
+  var fragment = document.createDocumentFragment();
+
+  features.forEach(function (it) {
+    var li = document.createElement('li');
+
+    li.className = 'popup__feature popup__feature--' + it;
+
+    fragment.appendChild(li);
+  });
+
+  return fragment;
+};
+
+var getOfferAdPhotos = function (photos) {
+  var fragment = document.createDocumentFragment();
+
+  photos.forEach(function (it) {
+    var image = popupOfferPhoto.cloneNode(true);
+
+    image.src = it;
+
+    fragment.appendChild(image);
+  });
+
+  return fragment;
+};
+
+var getOfferAd = function (adData, popupTemplate) {
+  var offerAdElement = popupTemplate.cloneNode(true);
+
+  var offerAdFeatures = getOfferAdFeatures(adData.offer.features);
+  var offerAdPhotos = getOfferAdPhotos(adData.offer.photos);
+
+  offerAdElement.querySelector('.popup__avatar').src = adData.author.avatar;
+  offerAdElement.querySelector('.popup__title').textContent = adData.offer.title;
+  offerAdElement.querySelector('.popup__text--address').textContent = adData.offer.address;
+  offerAdElement.querySelector('.popup__text--price').textContent = adData.offer.price + '₽/ночь';
+  offerAdElement.querySelector('.popup__type').textContent = offerTypesMap[adData.offer.type];
+  offerAdElement.querySelector('.popup__text--capacity').textContent = adData.offer.rooms + ' комнаты для ' + adData.offer.guests + ' гостей';
+  offerAdElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adData.offer.checkin + ', выезд до ' + adData.offer.checkout;
+  offerAdElement.querySelector('.popup__features').innerHTML = '';
+  offerAdElement.querySelector('.popup__features').appendChild(offerAdFeatures);
+  offerAdElement.querySelector('.popup__description').textContent = adData.offer.description;
+  offerAdElement.querySelector('.popup__photos').innerHTML = '';
+  offerAdElement.querySelector('.popup__photos').appendChild(offerAdPhotos);
+
+  return offerAdElement;
+};
+
+var renderOfferPopup = function (offer, container) {
+  var offerAd = getOfferAd(offer, popupOffer);
+
+  container.insertAdjacentElement('beforebegin', offerAd);
+};
+
 var initMap = function (offers) {
+  var defaultOffer = offers[0];
+
   map.classList.remove('map--faded');
 
   renderPins(offers, mapPins);
+
+  renderOfferPopup(defaultOffer, mapFilter);
 };
 
 var offers = getOffers(OFFERS_COUNT);
