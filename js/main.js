@@ -71,7 +71,7 @@ var map = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin').content;
-var pin = pinTemplate.querySelector('.map__pin')
+var pin = pinTemplate.querySelector('.map__pin');
 var popupOfferTemplate = document.querySelector('#card').content;
 var popupOffer = popupOfferTemplate.querySelector('.map__card');
 var popupOfferPhoto = popupOfferTemplate.querySelector('.popup__photo');
@@ -144,17 +144,17 @@ var getOffers = function (count) {
   return offers;
 };
 
-var renderPin = function (pin, template) {
+var renderPin = function (offerData, template) {
   var pinElement = template.cloneNode(true);
 
-  var pinCoordsX = pin.location.x - PIN_SIZE.WIDTH / 2;
-  var pinCoordsY = pin.location.y - PIN_SIZE.HEIGHT;
+  var pinCoordsX = offerData.location.x - PIN_SIZE.WIDTH / 2;
+  var pinCoordsY = offerData.location.y - PIN_SIZE.HEIGHT;
 
   pinElement.style.left = pinCoordsX + 'px';
   pinElement.style.top = pinCoordsY + 'px';
 
-  pinElement.querySelector('img').src = pin.author.avatar;
-  pinElement.querySelector('img').alt = pin.offer.title;
+  pinElement.querySelector('img').src = offerData.author.avatar;
+  pinElement.querySelector('img').alt = offerData.offer.title;
 
   return pinElement;
 };
