@@ -77,6 +77,10 @@ var pinTemplate = document.querySelector('#pin').content;
 var pin = pinTemplate.querySelector('.map__pin');
 var popupOfferTemplate = document.querySelector('#card').content;
 var popupOffer = popupOfferTemplate.querySelector('.map__card');
+var adForm = document.querySelector('.ad-form');
+var adFormElements = adForm.querySelectorAll('fieldset');
+var filterForm = document.querySelector('.map__filters');
+var filterFormElements = filterForm.querySelectorAll('select, fieldset');
 var popupOfferPhoto = popupOfferTemplate.querySelector('.popup__photo');
 
 var getShuffledArray = function (arr) {
@@ -228,6 +232,12 @@ var renderOfferPopup = function (offer, container) {
   container.insertAdjacentElement('beforebegin', offerAd);
 };
 
+var toggleElementsDisabled = function (elements, isDisabled) {
+  elements.forEach(function (it) {
+    it.disabled = isDisabled;
+  });
+};
+
 var offers = getOffers(OFFERS_COUNT);
 
 var onMainPinFirstClick = function (evt) {
@@ -246,6 +256,10 @@ var initMap = function (mapOffers) {
   var defaultOffer = offers[0];
 
   map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+
+  toggleElementsDisabled(adFormElements, false);
+  toggleElementsDisabled(filterFormElements, false);
 
   mainPin.removeEventListener('mousedown', onMainPinFirstClick);
   mainPin.removeEventListener('keydown', onMainPinEnterPress);
@@ -255,6 +269,8 @@ var initMap = function (mapOffers) {
 };
 
 var initApp = function () {
+  toggleElementsDisabled(adFormElements, true);
+  toggleElementsDisabled(filterFormElements, true);
 
   mainPin.addEventListener('mousedown', onMainPinFirstClick);
   mainPin.addEventListener('keydown', onMainPinEnterPress);
