@@ -67,6 +67,13 @@ var offerTypesMap = {
   bungalo: 'Бунгало'
 };
 
+var roomsToGuestsMap = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
 var MAIN_MOUSE_BTN_KEY = 0;
 
 var map = document.querySelector('.map');
@@ -78,8 +85,14 @@ var pin = pinTemplate.querySelector('.map__pin');
 var popupOfferTemplate = document.querySelector('#card').content;
 var popupOffer = popupOfferTemplate.querySelector('.map__card');
 var adForm = document.querySelector('.ad-form');
-var addressInput = adForm.querySelector('#address');
 var adFormElements = adForm.querySelectorAll('fieldset');
+var adTypeSelect = document.querySelector('#type');
+var adPriceInput = document.querySelector('#price');
+var adAddressInput = adForm.querySelector('#address');
+var adTimeInInput = adForm.querySelector('#timein');
+var adTimeOutInput = adForm.querySelector('#timeout');
+var adRoomNumberSelect = adForm.querySelector('#room_number');
+var adCapacitySelect = adForm.querySelector('#capacity');
 var filterForm = document.querySelector('.map__filters');
 var filterFormElements = filterForm.querySelectorAll('select, fieldset');
 var popupOfferPhoto = popupOfferTemplate.querySelector('.popup__photo');
@@ -264,6 +277,48 @@ var getPinCoords = function (x, y) {
   return pinCoords;
 };
 
+var onChangeAdType = function (evt) {
+  switch (offerTypesMap[evt.target.value]) {
+    case offerTypesMap.flat:
+      adPriceInput.min = 1000;
+      adPriceInput.placeholder = '1000';
+      break;
+    case offerTypesMap.house:
+      adPriceInput.min = 5000;
+      adPriceInput.placeholder = '5000';
+      break;
+    case offerTypesMap.palace:
+      adPriceInput.min = 10000;
+      adPriceInput.placeholder = '10000';
+      break;
+    default:
+      adPriceInput.min = 0;
+      adPriceInput.placeholder = '5000';
+  }
+};
+
+var onChangeAdTime = function (evt) {
+  var timeValue = evt.target.value;
+
+  adTimeInInput.value = timeValue;
+  adTimeOutInput.value = timeValue;
+};
+
+var onChangeCapacity = function () {
+  var roomGuests = roomsToGuestsMap[adRoomNumberSelect.value];
+  var isAllow = roomGuests.includes(Number(adCapacitySelect.value));
+
+  adCapacitySelect.setCustomValidity(isAllow ? '' : 'Чувак, слишком много людей для такого типа помещения... Think about it!🤔');
+};
+
+var setAdFromListeners = function () {
+  adTypeSelect.addEventListener('change', onChangeAdType);
+  adTimeInInput.addEventListener('change', onChangeAdTime);
+  adTimeOutInput.addEventListener('change', onChangeAdTime);
+  adCapacitySelect.addEventListener('change', onChangeCapacity);
+  adRoomNumberSelect.addEventListener('change', onChangeCapacity);
+};
+
 var initMap = function (mapOffers) {
   var defaultOffer = offers[0];
   var currentPinCoords = getPinCoords(mainPin.offsetTop + PIN_SIZE.HEIGHT, mainPin.offsetLeft + PIN_SIZE.WIDTH / 2);
@@ -274,9 +329,11 @@ var initMap = function (mapOffers) {
   renderPins(mapOffers, mapPins);
   renderOfferPopup(defaultOffer, mapFilter);
 
-  addressInput.value = currentPinCoords;
+  adAddressInput.value = currentPinCoords;
 
   toggleActiveFormsStatus(true);
+
+  setAdFromListeners();
 
   mainPin.removeEventListener('mousedown', onMainPinFirstClick);
   mainPin.removeEventListener('keydown', onMainPinEnterPress);
@@ -290,7 +347,7 @@ var initApp = function () {
   mainPin.addEventListener('mousedown', onMainPinFirstClick);
   mainPin.addEventListener('keydown', onMainPinEnterPress);
 
-  addressInput.value = defaultPinCoords;
+  adAddressInput.value = defaultPinCoords;
 };
 
 initApp();
