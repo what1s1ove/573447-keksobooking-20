@@ -67,7 +67,10 @@ var offerTypesMap = {
   bungalo: 'Бунгало'
 };
 
+var MAIN_MOUSE_BTN_KEY = 0;
+
 var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
 var mapPins = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin').content;
@@ -225,16 +228,36 @@ var renderOfferPopup = function (offer, container) {
   container.insertAdjacentElement('beforebegin', offerAd);
 };
 
-var initMap = function (offers) {
+var offers = getOffers(OFFERS_COUNT);
+
+var onMainPinFirstClick = function (evt) {
+  if (evt.button === MAIN_MOUSE_BTN_KEY) {
+    initMap(offers);
+  }
+};
+
+var onMainPinEnterPress = function (evt) {
+  if (evt.key === 'Enter') {
+    initMap(offers);
+  }
+};
+
+var initMap = function (mapOffers) {
   var defaultOffer = offers[0];
 
   map.classList.remove('map--faded');
 
-  renderPins(offers, mapPins);
+  mainPin.removeEventListener('mousedown', onMainPinFirstClick);
+  mainPin.removeEventListener('keydown', onMainPinEnterPress);
 
+  renderPins(mapOffers, mapPins);
   renderOfferPopup(defaultOffer, mapFilter);
 };
 
-var offers = getOffers(OFFERS_COUNT);
+var initApp = function () {
 
-initMap(offers);
+  mainPin.addEventListener('mousedown', onMainPinFirstClick);
+  mainPin.addEventListener('keydown', onMainPinEnterPress);
+};
+
+initApp();
