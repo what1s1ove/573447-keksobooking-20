@@ -78,6 +78,7 @@ var pin = pinTemplate.querySelector('.map__pin');
 var popupOfferTemplate = document.querySelector('#card').content;
 var popupOffer = popupOfferTemplate.querySelector('.map__card');
 var adForm = document.querySelector('.ad-form');
+var addressInput = adForm.querySelector('#address');
 var adFormElements = adForm.querySelectorAll('fieldset');
 var filterForm = document.querySelector('.map__filters');
 var filterFormElements = filterForm.querySelectorAll('select, fieldset');
@@ -238,6 +239,11 @@ var toggleElementsDisabled = function (elements, isDisabled) {
   });
 };
 
+var toggleActiveFormsStatus = function (isActive) {
+  toggleElementsDisabled(adFormElements, !isActive);
+  toggleElementsDisabled(filterFormElements, !isActive);
+};
+
 var offers = getOffers(OFFERS_COUNT);
 
 var onMainPinFirstClick = function (evt) {
@@ -252,28 +258,39 @@ var onMainPinEnterPress = function (evt) {
   }
 };
 
+var getPinCoords = function (x, y) {
+  var pinCoords = x + ', ' + y;
+
+  return pinCoords;
+};
+
 var initMap = function (mapOffers) {
   var defaultOffer = offers[0];
+  var currentPinCoords = getPinCoords(mainPin.offsetTop + PIN_SIZE.HEIGHT, mainPin.offsetLeft + PIN_SIZE.WIDTH / 2);
 
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
 
-  toggleElementsDisabled(adFormElements, false);
-  toggleElementsDisabled(filterFormElements, false);
+  renderPins(mapOffers, mapPins);
+  renderOfferPopup(defaultOffer, mapFilter);
+
+  addressInput.value = currentPinCoords;
+
+  toggleActiveFormsStatus(true);
 
   mainPin.removeEventListener('mousedown', onMainPinFirstClick);
   mainPin.removeEventListener('keydown', onMainPinEnterPress);
-
-  renderPins(mapOffers, mapPins);
-  renderOfferPopup(defaultOffer, mapFilter);
 };
 
 var initApp = function () {
-  toggleElementsDisabled(adFormElements, true);
-  toggleElementsDisabled(filterFormElements, true);
+  var defaultPinCoords = getPinCoords(mainPin.offsetTop - mainPin.offsetHeight / 2, mainPin.offsetLeft - mainPin.offsetWidth / 2);
+
+  toggleActiveFormsStatus(false);
 
   mainPin.addEventListener('mousedown', onMainPinFirstClick);
   mainPin.addEventListener('keydown', onMainPinEnterPress);
+
+  addressInput.value = defaultPinCoords;
 };
 
 initApp();
