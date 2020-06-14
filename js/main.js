@@ -293,7 +293,7 @@ var onChangeAdType = function (evt) {
       break;
     default:
       adPriceInput.min = 0;
-      adPriceInput.placeholder = '5000';
+      adPriceInput.placeholder = '0';
   }
 };
 
