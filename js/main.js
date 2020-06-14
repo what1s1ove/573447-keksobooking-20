@@ -76,14 +76,15 @@ var roomsToGuestsMap = {
 
 var MAIN_MOUSE_BTN_KEY = 0;
 
-var map = document.querySelector('.map');
+var mainMap = document.querySelector('.map');
 var mainPin = document.querySelector('.map__pin--main');
 var mapPins = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin').content;
-var pin = pinTemplate.querySelector('.map__pin');
+var pinElement = pinTemplate.querySelector('.map__pin');
 var popupOfferTemplate = document.querySelector('#card').content;
-var popupOffer = popupOfferTemplate.querySelector('.map__card');
+var popupOfferElement = popupOfferTemplate.querySelector('.map__card');
+var popupOfferElementPhoto = popupOfferTemplate.querySelector('.popup__photo');
 var adForm = document.querySelector('.ad-form');
 var adFormElements = adForm.querySelectorAll('fieldset');
 var adTypeSelect = document.querySelector('#type');
@@ -95,7 +96,8 @@ var adRoomNumberSelect = adForm.querySelector('#room_number');
 var adCapacitySelect = adForm.querySelector('#capacity');
 var filterForm = document.querySelector('.map__filters');
 var filterFormElements = filterForm.querySelectorAll('select, fieldset');
-var popupOfferPhoto = popupOfferTemplate.querySelector('.popup__photo');
+var popupOffer;
+var popupOfferCloseBtn;
 
 var getShuffledArray = function (arr) {
   var copiedArray = arr.slice();
@@ -122,12 +124,21 @@ var getRandomItems = function (arr) {
   return shuffledArray.splice(0, randomIndex);
 };
 
+var getItemById = function (arr, id) {
+  var itemById = arr.find(function (it) {
+    return it.id === id;
+  });
+
+  return itemById;
+};
+
 var getOffer = function (offerIdx) {
   var offerNumber = offerIdx + 1;
   var offerLocationX = getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX);
   var offerLocationY = getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX);
 
   var offer = {
+    id: offerNumber.toString(),
     author: {
       avatar: 'img/avatars/user' + (offerIdx < 10 ? '0' : '') + offerNumber + '.png',
     },
@@ -166,25 +177,27 @@ var getOffers = function (count) {
 };
 
 var renderPin = function (offerData, template) {
-  var pinElement = template.cloneNode(true);
+  var pin = template.cloneNode(true);
 
   var pinCoordsX = offerData.location.x - PIN_SIZE.WIDTH / 2;
   var pinCoordsY = offerData.location.y - PIN_SIZE.HEIGHT;
 
-  pinElement.style.left = pinCoordsX + 'px';
-  pinElement.style.top = pinCoordsY + 'px';
+  pin.style.left = pinCoordsX + 'px';
+  pin.style.top = pinCoordsY + 'px';
 
-  pinElement.querySelector('img').src = offerData.author.avatar;
-  pinElement.querySelector('img').alt = offerData.offer.title;
+  pin.querySelector('img').src = offerData.author.avatar;
+  pin.querySelector('img').alt = offerData.offer.title;
 
-  return pinElement;
+  pin.dataset.id = offerData.id;
+
+  return pin;
 };
 
 var renderPins = function (offers, container) {
   var fragment = document.createDocumentFragment();
 
   offers.forEach(function (offer) {
-    fragment.appendChild(renderPin(offer, pin));
+    fragment.appendChild(renderPin(offer, pinElement));
   });
 
   container.appendChild(fragment);
@@ -208,7 +221,7 @@ var getOfferAdPhotos = function (photos) {
   var fragment = document.createDocumentFragment();
 
   photos.forEach(function (it) {
-    var image = popupOfferPhoto.cloneNode(true);
+    var image = popupOfferElementPhoto.cloneNode(true);
 
     image.src = it;
 
@@ -241,9 +254,11 @@ var getOfferAd = function (adData, popupTemplate) {
 };
 
 var renderOfferPopup = function (offer, container) {
-  var offerAd = getOfferAd(offer, popupOffer);
+  var offerAd = getOfferAd(offer, popupOfferElement);
 
   container.insertAdjacentElement('beforebegin', offerAd);
+
+  return offerAd;
 };
 
 var toggleElementsDisabled = function (elements, isDisabled) {
@@ -319,15 +334,57 @@ var setAdFromListeners = function () {
   adRoomNumberSelect.addEventListener('change', onChangeCapacity);
 };
 
+var onPopupEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+
+    closePopup();
+  }
+};
+
+var closePopup = function () {
+  popupOffer.remove();
+
+  popupOfferCloseBtn.removeEventListener('click', popupOfferCloseBtn);
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+var openPopup = function (offer) {
+  popupOffer = renderOfferPopup(offer, mapFilter);
+
+  popupOfferCloseBtn = popupOffer.querySelector('.popup__close');
+
+  popupOfferCloseBtn.addEventListener('click', closePopup);
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var initMapPinsListeners = function (map) {
+  map.addEventListener('click', function (evt) {
+    var target = evt.target.closest('.map__pin');
+
+    if (!target || !target.hasAttribute('data-id')) {
+      return;
+    }
+
+    var activeOffer = getItemById(offers, target.getAttribute('data-id'));
+
+    if (popupOffer) {
+      closePopup();
+    }
+
+    openPopup(activeOffer);
+  });
+};
+
 var initMap = function (mapOffers) {
-  var defaultOffer = offers[0];
   var currentPinCoords = getPinCoords(mainPin.offsetTop + PIN_SIZE.HEIGHT, mainPin.offsetLeft + PIN_SIZE.WIDTH / 2);
 
-  map.classList.remove('map--faded');
+  mainMap.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
 
   renderPins(mapOffers, mapPins);
-  renderOfferPopup(defaultOffer, mapFilter);
+
+  initMapPinsListeners(mapPins);
 
   adAddressInput.value = currentPinCoords;
 
