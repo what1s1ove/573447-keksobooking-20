@@ -272,7 +272,7 @@ var onMainPinEnterPress = function (evt) {
 };
 
 var getPinCoords = function (x, y) {
-  var pinCoords = x + ', ' + y;
+  var pinCoords = x.toFixed() + ', ' + y.toFixed();
 
   return pinCoords;
 };
