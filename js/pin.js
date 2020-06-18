@@ -22,7 +22,7 @@ window.pin = (function () {
   };
 
   return {
-    initPin: initPin,
-    activePin: activePin
+    init: initPin,
+    active: activePin
   };
 })();

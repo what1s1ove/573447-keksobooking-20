@@ -88,7 +88,7 @@ window.form = (function () {
   };
 
   return {
-    initForm: initForm,
-    activeForm: activeForm
+    init: initForm,
+    active: activeForm
   };
 })();

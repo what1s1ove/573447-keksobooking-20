@@ -9,15 +9,15 @@ window.main = (function () {
   };
 
   var activeApp = function () {
-    window.map.activeMap(offers);
-    window.form.activeForm();
-    window.pin.activePin();
+    window.map.active(offers);
+    window.form.active();
+    window.pin.active();
   };
 
   var initApp = function () {
-    window.map.initMap();
-    window.form.initForm();
-    window.pin.initPin();
+    window.map.init();
+    window.form.init();
+    window.pin.init();
   };
 
   initApp();

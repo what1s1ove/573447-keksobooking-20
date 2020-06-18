@@ -67,7 +67,7 @@ window.map = (function () {
   };
 
   return {
-    initMap: initMap,
-    activeMap: activeMap
+    init: initMap,
+    active: activeMap
   };
 })();
