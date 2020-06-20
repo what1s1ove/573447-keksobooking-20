@@ -47,8 +47,8 @@ window.pin = (function () {
       var Border = {
         TOP: constants.ADS_LOCATION_COORDS.Y.MIN - constants.MARKER_SIZES.HEIGHT,
         BOTTOM: constants.ADS_LOCATION_COORDS.Y.MAX - constants.MARKER_SIZES.HEIGHT,
-        LEFT: constants.ADS_LOCATION_COORDS.X.MIN,
-        RIGHT: constants.ADS_LOCATION_COORDS.X.MAX - mainPin.offsetWidth
+        LEFT: constants.ADS_LOCATION_COORDS.X.MIN - (constants.MARKER_SIZES.WIDTH / 2),
+        RIGHT: constants.ADS_LOCATION_COORDS.X.MAX - (constants.MARKER_SIZES.WIDTH / 2)
       };
 
       if (mainPinPosition.x >= Border.LEFT && mainPinPosition.x <= Border.RIGHT) {
