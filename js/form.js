@@ -1,6 +1,8 @@
 'use strict';
 
 window.form = (function () {
+  var constants = window.common;
+  var helpers = window.helpers;
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
   var adAddressInput = adForm.querySelector('#address');
@@ -31,16 +33,16 @@ window.form = (function () {
   };
 
   var onChangeAdType = function (evt) {
-    switch (window.common.offerTypesMap[evt.target.value]) {
-      case window.common.offerTypesMap.flat:
+    switch (constants.offerTypesMap[evt.target.value]) {
+      case constants.offerTypesMap.flat:
         adPriceInput.min = 1000;
         adPriceInput.placeholder = '1000';
         break;
-      case window.common.offerTypesMap.house:
+      case constants.offerTypesMap.house:
         adPriceInput.min = 5000;
         adPriceInput.placeholder = '5000';
         break;
-      case window.common.offerTypesMap.palace:
+      case constants.offerTypesMap.palace:
         adPriceInput.min = 10000;
         adPriceInput.placeholder = '10000';
         break;
@@ -77,11 +79,11 @@ window.form = (function () {
 
     setAdFromListeners();
 
-    window.helpers.toggleElementsDisabled(adFormElements, false);
+    helpers.toggleElementsDisabled(adFormElements, false);
   };
 
   var initForm = function () {
-    window.helpers.toggleElementsDisabled(adFormElements, true);
+    helpers.toggleElementsDisabled(adFormElements, true);
   };
 
   return {
