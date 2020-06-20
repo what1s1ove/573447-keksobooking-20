@@ -26,7 +26,7 @@ window.pin = (function () {
       y: downEvt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
+    var onMouseTrack = function (moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
@@ -66,14 +66,17 @@ window.pin = (function () {
 
       window.form.setAddressCoords(pinCoords.x, pinCoords.y);
     };
+
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseTrack);
+      document.removeEventListener('mouseup', onMouseTrack);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousemove', onMouseTrack);
+    document.addEventListener('mouseup', onMouseTrack);
     document.addEventListener('mouseup', onMouseUp);
   };
 
