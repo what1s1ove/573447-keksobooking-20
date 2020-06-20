@@ -12,8 +12,8 @@ window.map = (function () {
   var renderPin = function (offerData, template) {
     var pin = template.cloneNode(true);
 
-    var pinCoordsX = offerData.location.x - window.common.PIN_SIZE.WIDTH / 2;
-    var pinCoordsY = offerData.location.y - window.common.PIN_SIZE.HEIGHT;
+    var pinCoordsX = offerData.location.x - window.common.PIN_SIZES.WIDTH / 2;
+    var pinCoordsY = offerData.location.y - window.common.PIN_SIZES.HEIGHT;
 
     pin.style.left = pinCoordsX + 'px';
     pin.style.top = pinCoordsY + 'px';

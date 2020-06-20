@@ -3,7 +3,6 @@
 window.form = (function () {
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
-  var mainPin = document.querySelector('.map__pin--main');
   var adAddressInput = adForm.querySelector('#address');
   var adTypeSelect = document.querySelector('#type');
   var adPriceInput = document.querySelector('#price');
@@ -23,6 +22,12 @@ window.form = (function () {
     var pinCoords = x.toFixed() + ', ' + y.toFixed();
 
     return pinCoords;
+  };
+
+  var setAddressCoords = function (x, y) {
+    var coords = getPinCoords(x, y);
+
+    adAddressInput.value = coords;
   };
 
   var onChangeAdType = function (evt) {
@@ -68,27 +73,20 @@ window.form = (function () {
   };
 
   var activeForm = function () {
-    var currentPinCoords = getPinCoords(mainPin.offsetTop + window.common.PIN_SIZE.HEIGHT, mainPin.offsetLeft + window.common.PIN_SIZE.WIDTH / 2);
-
     adForm.classList.remove('ad-form--disabled');
 
     setAdFromListeners();
 
     window.helpers.toggleElementsDisabled(adFormElements, false);
-
-    adAddressInput.value = currentPinCoords;
   };
 
   var initForm = function () {
-    var defaultPinCoords = getPinCoords(mainPin.offsetTop - mainPin.offsetHeight / 2, mainPin.offsetLeft - mainPin.offsetWidth / 2);
-
     window.helpers.toggleElementsDisabled(adFormElements, true);
-
-    adAddressInput.value = defaultPinCoords;
   };
 
   return {
     init: initForm,
-    active: activeForm
+    active: activeForm,
+    setAddressCoords: setAddressCoords
   };
 })();
