@@ -1,6 +1,8 @@
 'use strict';
 
 window.map = (function () {
+  var constants = window.common;
+  var helpers = window.helpers;
   var mainMap = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content;
@@ -12,8 +14,8 @@ window.map = (function () {
   var renderPin = function (offerData, template) {
     var pin = template.cloneNode(true);
 
-    var pinCoordsX = offerData.location.x - window.common.PIN_SIZE.WIDTH / 2;
-    var pinCoordsY = offerData.location.y - window.common.PIN_SIZE.HEIGHT;
+    var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
+    var pinCoordsY = offerData.location.y - constants.PIN_SIZES.HEIGHT;
 
     pin.style.left = pinCoordsX + 'px';
     pin.style.top = pinCoordsY + 'px';
@@ -44,7 +46,7 @@ window.map = (function () {
         return;
       }
 
-      var activeOffer = window.helpers.getItemById(localOffers, target.getAttribute('data-id'));
+      var activeOffer = helpers.getItemById(localOffers, target.getAttribute('data-id'));
 
       window.main.openAdPopup(activeOffer);
     });
@@ -59,11 +61,11 @@ window.map = (function () {
 
     initMapPinsListeners(mapPins);
 
-    window.helpers.toggleElementsDisabled(filterFormElements, false);
+    helpers.toggleElementsDisabled(filterFormElements, false);
   };
 
   var initMap = function () {
-    window.helpers.toggleElementsDisabled(filterFormElements, true);
+    helpers.toggleElementsDisabled(filterFormElements, true);
   };
 
   return {

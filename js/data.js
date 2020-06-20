@@ -1,6 +1,7 @@
 'use strict';
 
 window.data = (function () {
+  var helpers = window.helpers;
   var OfferOptions = {
     TYPES: [
       'palace',
@@ -57,8 +58,8 @@ window.data = (function () {
 
   var getOffer = function (offerIdx) {
     var offerNumber = offerIdx + 1;
-    var offerLocationX = window.helpers.getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX);
-    var offerLocationY = window.helpers.getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX);
+    var offerLocationX = helpers.getRandomNumber(OfferOptions.LOCATION.X.MIN, OfferOptions.LOCATION.X.MAX);
+    var offerLocationY = helpers.getRandomNumber(OfferOptions.LOCATION.Y.MIN, OfferOptions.LOCATION.Y.MAX);
 
     var offer = {
       id: offerNumber.toString(),
@@ -68,15 +69,15 @@ window.data = (function () {
       offer: {
         title: 'Offer #' + offerNumber,
         address: offerLocationX + ', ' + offerLocationY,
-        price: window.helpers.getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
-        type: OfferOptions.TYPES[window.helpers.getRandomNumber(0, OfferOptions.TYPES.length - 1)],
-        guests: window.helpers.getRandomNumber(OfferOptions.GUESTS.MIN, OfferOptions.GUESTS.MAX),
-        rooms: window.helpers.getRandomNumber(OfferOptions.ROOMS.MIN, OfferOptions.ROOMS.MAX),
-        checkin: OfferOptions.CHECKINS[window.helpers.getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
-        checkout: OfferOptions.CHECKOUTS[window.helpers.getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
-        features: window.helpers.getRandomItems(OfferOptions.FEATURES),
+        price: helpers.getRandomNumber(OfferOptions.PRICE.MIN, OfferOptions.PRICE.MAX),
+        type: OfferOptions.TYPES[helpers.getRandomNumber(0, OfferOptions.TYPES.length - 1)],
+        guests: helpers.getRandomNumber(OfferOptions.GUESTS.MIN, OfferOptions.GUESTS.MAX),
+        rooms: helpers.getRandomNumber(OfferOptions.ROOMS.MIN, OfferOptions.ROOMS.MAX),
+        checkin: OfferOptions.CHECKINS[helpers.getRandomNumber(0, OfferOptions.CHECKINS.length - 1)],
+        checkout: OfferOptions.CHECKOUTS[helpers.getRandomNumber(0, OfferOptions.CHECKOUTS.length - 1)],
+        features: helpers.getRandomItems(OfferOptions.FEATURES),
         description: 'Simple description of offer #' + offerNumber,
-        photos: window.helpers.getRandomItems(OfferOptions.PHOTOS),
+        photos: helpers.getRandomItems(OfferOptions.PHOTOS),
       },
       location: {
         x: offerLocationX,
