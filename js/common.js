@@ -11,7 +11,11 @@ window.common = (function () {
   var PIN_SIZES = {
     WIDTH: 50,
     HEIGHT: 70,
-    TAIL_HEIGHT: 16
+  };
+
+  var MARKER_SIZES = {
+    WIDTH: 66,
+    HEIGHT: 80,
   };
 
   var ADS_LOCATION_COORDS = {
@@ -27,6 +31,7 @@ window.common = (function () {
 
   return {
     PIN_SIZES: PIN_SIZES,
+    MARKER_SIZES: MARKER_SIZES,
     ADS_LOCATION_COORDS: ADS_LOCATION_COORDS,
     offerTypesMap: offerTypesMap
   };

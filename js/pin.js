@@ -45,8 +45,8 @@ window.pin = (function () {
       };
 
       var Border = {
-        TOP: constants.ADS_LOCATION_COORDS.Y.MIN - mainPin.offsetHeight - constants.PIN_SIZES.TAIL_HEIGHT,
-        BOTTOM: constants.ADS_LOCATION_COORDS.Y.MAX - mainPin.offsetHeight - constants.PIN_SIZES.TAIL_HEIGHT,
+        TOP: constants.ADS_LOCATION_COORDS.Y.MIN - constants.MARKER_SIZES.HEIGHT,
+        BOTTOM: constants.ADS_LOCATION_COORDS.Y.MAX - constants.MARKER_SIZES.HEIGHT,
         LEFT: constants.ADS_LOCATION_COORDS.X.MIN,
         RIGHT: constants.ADS_LOCATION_COORDS.X.MAX - mainPin.offsetWidth
       };
@@ -60,8 +60,8 @@ window.pin = (function () {
       }
 
       var pinCoords = {
-        x: mainPinPosition.x + Math.ceil(constants.PIN_SIZES.WIDTH / 2),
-        y: mainPinPosition.y + constants.PIN_SIZES.HEIGHT + constants.PIN_SIZES.TAIL_HEIGHT
+        x: mainPinPosition.x + (constants.MARKER_SIZES.WIDTH / 2),
+        y: mainPinPosition.y + constants.MARKER_SIZES.HEIGHT
       };
 
       window.form.setAddressCoords(pinCoords.x, pinCoords.y);
