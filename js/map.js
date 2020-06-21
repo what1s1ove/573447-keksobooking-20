@@ -68,13 +68,17 @@ window.map = (function () {
     initMapPinsListeners(mapPins, offers);
   };
 
+  var onLoadOfferFailure = function (message) {
+    window.modals.renderError(message);
+  };
+
   var toggleMapStatus = function (isActive) {
     mainMap.classList.toggle('map--faded');
 
     helpers.toggleElementsDisabled(filterFormElements, !isActive);
 
     if (isActive) {
-      window.api.getOffers(onLoadOfferSuccess);
+      window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
     } else {
       clearMap();
     }

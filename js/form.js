@@ -34,10 +34,13 @@ window.form = (function () {
   };
 
   var onFormSendSuccess = function () {
+    window.modals.renderSuccess();
     window.main.toggleAppStatus(false);
   };
 
-  var onFormSendFailure = function () {};
+  var onFormSendFailure = function (message) {
+    window.modals.renderError(message);
+  };
 
 
   var onAdFormSubmit = function (evt) {

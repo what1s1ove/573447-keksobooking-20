@@ -19,7 +19,7 @@ window.pin = (function () {
     mainPin.style.top = pinInitCoords.y + 'px';
     mainPin.style.left = pinInitCoords.x + 'px';
 
-    window.form.setAddressCoords(pinInitCoords.x - mainPin.offsetHeight / 2, pinInitCoords.y - mainPin.offsetWidth / 2);
+    window.form.setAddressCoords(pinInitCoords.x + (mainPin.offsetWidth / 2), pinInitCoords.y + (mainPin.offsetHeight / 2));
   };
 
   var onPinFirstClick = function (evt) {
