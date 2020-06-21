@@ -7,7 +7,7 @@ window.api = (function () {
     OK: 200
   };
 
-  var sendRequest = function (method, path, onSuccess, onError) {
+  var sendRequest = function (method, path, onSuccess, onError, data) {
     var xhr = new XMLHttpRequest();
     var url = BASE_URL + path;
 
@@ -33,12 +33,15 @@ window.api = (function () {
 
     xhr.open(method, url);
 
-    xhr.send();
+    xhr.send(data || null);
   };
 
   return {
     getOffers: function (onSuccess, onError) {
       sendRequest('GET', '/data', onSuccess, onError);
+    },
+    sendAd: function (onSuccess, onError, data) {
+      sendRequest('POST', '', onSuccess, onError, data);
     }
   };
 })();

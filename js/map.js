@@ -20,6 +20,22 @@ window.map = (function () {
     return truthOffers;
   };
 
+  var removePins = function (pins) {
+    pins.forEach(function (it) {
+      if (it.hasAttribute('data-id')) {
+        it.remove();
+      }
+    });
+  };
+
+  var clearMap = function () {
+    var pins = mapPins.querySelectorAll('.map__pin');
+
+    removePins(pins);
+
+    window.card.close();
+  };
+
   var renderPin = function (offerData, offerIdx, template) {
     var pin = template.cloneNode(true);
 
@@ -58,7 +74,7 @@ window.map = (function () {
       var offerId = target.getAttribute('data-id');
       var activeOffer = offers[offerId];
 
-      window.card.openPopup(activeOffer);
+      window.card.open(activeOffer);
     });
   };
 
@@ -70,14 +86,20 @@ window.map = (function () {
     initMapPinsListeners(mapPins, truthOffers);
   };
 
-  var onLoadOfferFailure = function () {};
+  var onLoadOfferFailure = function (message) {
+    window.modals.renderError(message);
+  };
 
-  var activeMap = function () {
-    mainMap.classList.remove('map--faded');
+  var toggleMapStatus = function (isActive) {
+    mainMap.classList.toggle('map--faded');
 
-    window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
+    helpers.toggleElementsDisabled(filterFormElements, !isActive);
 
-    helpers.toggleElementsDisabled(filterFormElements, false);
+    if (isActive) {
+      window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
+    } else {
+      clearMap();
+    }
   };
 
   var initMap = function () {
@@ -86,6 +108,6 @@ window.map = (function () {
 
   return {
     init: initMap,
-    active: activeMap
+    toggleStatus: toggleMapStatus
   };
 })();

@@ -1,10 +1,10 @@
 'use strict';
 
 window.main = (function () {
-  var activeApp = function () {
-    window.map.active();
-    window.form.active();
-    window.pin.active();
+  var toggleAppStatus = function (isActive) {
+    window.map.toggleStatus(isActive);
+    window.form.toggleStatus(isActive);
+    window.pin.toggleStatus(isActive);
   };
 
   var initApp = function () {
@@ -16,7 +16,7 @@ window.main = (function () {
   initApp();
 
   return {
-    activeApp: activeApp,
+    toggleAppStatus: toggleAppStatus
 
   };
 })();

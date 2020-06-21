@@ -73,16 +73,19 @@ window.card = (function () {
   };
 
   var closePopup = function () {
-    popupOffer.remove();
+    if (popupOffer) {
+      popupOffer.remove();
 
-    popupOfferCloseBtn.removeEventListener('click', popupOfferCloseBtn);
-    document.removeEventListener('keydown', onPopupEscPress);
+      popupOfferCloseBtn.removeEventListener('click', popupOfferCloseBtn);
+      document.removeEventListener('keydown', onPopupEscPress);
+
+      popupOffer = null;
+      popupOfferCloseBtn = null;
+    }
   };
 
   var openPopup = function (offer) {
-    if (popupOffer) {
-      closePopup();
-    }
+    closePopup();
 
     popupOffer = renderOfferPopup(offer, mapFilter);
 
@@ -93,6 +96,7 @@ window.card = (function () {
   };
 
   return {
-    openPopup: openPopup
+    open: openPopup,
+    close: closePopup
   };
 })();

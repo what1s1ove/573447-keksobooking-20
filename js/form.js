@@ -12,6 +12,8 @@ window.form = (function () {
   var adTimeOutInput = adForm.querySelector('#timeout');
   var adRoomNumberSelect = adForm.querySelector('#room_number');
   var adCapacitySelect = adForm.querySelector('#capacity');
+  var adFormResetBtn = adForm.querySelector('.ad-form__reset');
+  var cleanUpAdForm = null;
 
   var roomsToGuestsMap = {
     1: [1],
@@ -32,8 +34,8 @@ window.form = (function () {
     adAddressInput.value = coords;
   };
 
-  var onChangeAdType = function (evt) {
-    switch (constants.offerTypesMap[evt.target.value]) {
+  var changeAdType = function () {
+    switch (constants.offerTypesMap[adTypeSelect.value]) {
       case constants.offerTypesMap.flat:
         adPriceInput.min = 1000;
         adPriceInput.placeholder = '1000';
@@ -52,34 +54,92 @@ window.form = (function () {
     }
   };
 
-  var onChangeAdTime = function (evt) {
+  var changeAdTime = function (evt) {
     var timeValue = evt.target.value;
 
     adTimeInInput.value = timeValue;
     adTimeOutInput.value = timeValue;
   };
 
-  var onChangeCapacity = function () {
+  var changeCapacity = function () {
     var roomGuests = roomsToGuestsMap[adRoomNumberSelect.value];
     var isAllow = roomGuests.includes(Number(adCapacitySelect.value));
 
-    adCapacitySelect.setCustomValidity(isAllow ? '' : 'Чувак, слишком много людей для такого типа помещения... Think about it!🤔');
+    adCapacitySelect.setCustomValidity(
+        isAllow
+          ? ''
+          : 'Чувак, слишком много людей для такого типа помещения... Think about it!🤔'
+    );
+  };
+
+  var onFormSendSuccess = function () {
+    window.modals.renderSuccess();
+    window.main.toggleAppStatus(false);
+  };
+
+  var onFormSendFailure = function (message) {
+    window.modals.renderError(message);
+  };
+
+
+  var onAdFormSubmit = function (evt) {
+    var formData = new FormData(adForm);
+
+    window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
+
+    evt.preventDefault();
+  };
+
+  var onAdFormChange = function (evt) {
+    var target = evt.target;
+
+    switch (target.name) {
+      case adTimeInInput.name:
+      case adTimeOutInput.name:
+        changeAdTime(evt);
+        break;
+      case adCapacitySelect.name:
+      case adRoomNumberSelect.name:
+        changeCapacity();
+        break;
+      case adTypeSelect.name:
+        changeAdType();
+        break;
+      default:
+        return;
+    }
+  };
+
+  var onAdFormReset = function (evt) {
+    evt.preventDefault();
+
+    window.main.toggleAppStatus(false);
   };
 
   var setAdFromListeners = function () {
-    adTypeSelect.addEventListener('change', onChangeAdType);
-    adTimeInInput.addEventListener('change', onChangeAdTime);
-    adTimeOutInput.addEventListener('change', onChangeAdTime);
-    adCapacitySelect.addEventListener('change', onChangeCapacity);
-    adRoomNumberSelect.addEventListener('change', onChangeCapacity);
+    adForm.addEventListener('submit', onAdFormSubmit);
+    adForm.addEventListener('change', onAdFormChange);
+    adFormResetBtn.addEventListener('click', onAdFormReset);
+
+    return function () {
+      adForm.removeEventListener('submit', onAdFormSubmit);
+      adForm.removeEventListener('change', onAdFormChange);
+      adFormResetBtn.removeEventListener('click', onAdFormReset);
+    };
   };
 
-  var activeForm = function () {
-    adForm.classList.remove('ad-form--disabled');
+  var toggleFormStatus = function (isActive) {
+    adForm.classList.toggle('ad-form--disabled');
 
-    setAdFromListeners();
+    helpers.toggleElementsDisabled(adFormElements, !isActive);
 
-    helpers.toggleElementsDisabled(adFormElements, false);
+    if (isActive) {
+      cleanUpAdForm = setAdFromListeners();
+    } else {
+      cleanUpAdForm();
+
+      adForm.reset();
+    }
   };
 
   var initForm = function () {
@@ -88,7 +148,7 @@ window.form = (function () {
 
   return {
     init: initForm,
-    active: activeForm,
+    toggleStatus: toggleFormStatus,
     setAddressCoords: setAddressCoords
   };
 })();
