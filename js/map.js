@@ -10,6 +10,7 @@ window.map = (function () {
   var filterForm = document.querySelector('.map__filters');
   var filterFormElements = filterForm.querySelectorAll('select, fieldset');
 
+<<<<<<< HEAD
   var clearMap = function () {
     var pins = mapPins.querySelectorAll('.map__pin');
 
@@ -18,6 +19,16 @@ window.map = (function () {
         it.remove();
       }
     });
+=======
+  var getTruthOffers = function (offers) {
+    var truthOffers = offers.filter(function (it) {
+      var isTruth = Boolean(it.offer);
+
+      return isTruth;
+    });
+
+    return truthOffers;
+>>>>>>> master
   };
 
   var renderPin = function (offerData, offerIdx, template) {
@@ -63,9 +74,11 @@ window.map = (function () {
   };
 
   var onLoadOfferSuccess = function (offers) {
-    renderPins(offers, mapPins);
+    var truthOffers = getTruthOffers(offers);
 
-    initMapPinsListeners(mapPins, offers);
+    renderPins(truthOffers, mapPins);
+
+    initMapPinsListeners(mapPins, truthOffers);
   };
 
   var onLoadOfferFailure = function (message) {
