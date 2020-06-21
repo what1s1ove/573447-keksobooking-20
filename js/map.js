@@ -10,6 +10,16 @@ window.map = (function () {
   var filterForm = document.querySelector('.map__filters');
   var filterFormElements = filterForm.querySelectorAll('select, fieldset');
 
+  var clearMap = function () {
+    var pins = mapPins.querySelectorAll('.map__pin');
+
+    pins.forEach(function (it) {
+      if (it.hasAttribute('data-id')) {
+        it.remove();
+      }
+    });
+  };
+
   var renderPin = function (offerData, offerIdx, template) {
     var pin = template.cloneNode(true);
 
@@ -58,12 +68,16 @@ window.map = (function () {
     initMapPinsListeners(mapPins, offers);
   };
 
-  var activeMap = function () {
-    mainMap.classList.remove('map--faded');
+  var toggleMapStatus = function (isActive) {
+    mainMap.classList.toggle('map--faded');
 
-    window.api.getOffers(onLoadOfferSuccess, function () {});
+    helpers.toggleElementsDisabled(filterFormElements, !isActive);
 
-    helpers.toggleElementsDisabled(filterFormElements, false);
+    if (isActive) {
+      window.api.getOffers(onLoadOfferSuccess);
+    } else {
+      clearMap();
+    }
   };
 
   var initMap = function () {
@@ -72,6 +86,6 @@ window.map = (function () {
 
   return {
     init: initMap,
-    active: activeMap
+    toggleStatus: toggleMapStatus
   };
 })();
