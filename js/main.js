@@ -5,7 +5,6 @@ window.main = (function () {
     window.map.toggleStatus(isActive);
     window.form.toggleStatus(isActive);
     window.pin.toggleStatus(isActive);
-    window.card.toggleStatus(isActive);
   };
 
   var initApp = function () {

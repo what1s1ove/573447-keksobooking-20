@@ -10,16 +10,6 @@ window.map = (function () {
   var filterForm = document.querySelector('.map__filters');
   var filterFormElements = filterForm.querySelectorAll('select, fieldset');
 
-  var clearMap = function () {
-    var pins = mapPins.querySelectorAll('.map__pin');
-
-    pins.forEach(function (it) {
-      if (it.hasAttribute('data-id')) {
-        it.remove();
-      }
-    });
-  };
-
   var getTruthOffers = function (offers) {
     var truthOffers = offers.filter(function (it) {
       var isTruth = Boolean(it.offer);
@@ -28,6 +18,22 @@ window.map = (function () {
     });
 
     return truthOffers;
+  };
+
+  var removePins = function (pins) {
+    pins.forEach(function (it) {
+      if (it.hasAttribute('data-id')) {
+        it.remove();
+      }
+    });
+  };
+
+  var clearMap = function () {
+    var pins = mapPins.querySelectorAll('.map__pin');
+
+    removePins(pins);
+
+    window.card.close();
   };
 
   var renderPin = function (offerData, offerIdx, template) {
@@ -68,7 +74,7 @@ window.map = (function () {
       var offerId = target.getAttribute('data-id');
       var activeOffer = offers[offerId];
 
-      window.card.openPopup(activeOffer);
+      window.card.open(activeOffer);
     });
   };
 
