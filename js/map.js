@@ -58,12 +58,10 @@ window.map = (function () {
     initMapPinsListeners(mapPins, offers);
   };
 
-  var onLoadOfferFailure = function () {};
-
   var activeMap = function () {
     mainMap.classList.remove('map--faded');
 
-    window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
+    window.api.getOffers(onLoadOfferSuccess, function () {});
 
     helpers.toggleElementsDisabled(filterFormElements, false);
   };

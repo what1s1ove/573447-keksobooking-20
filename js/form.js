@@ -32,6 +32,19 @@ window.form = (function () {
     adAddressInput.value = coords;
   };
 
+  var onFormSendSuccess = function () {};
+
+  var onFormSendFailure = function () {};
+
+
+  var onAdFormSubmit = function (evt) {
+    var formData = new FormData(adForm);
+
+    window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
+
+    evt.preventDefault();
+  };
+
   var onChangeAdType = function (evt) {
     switch (constants.offerTypesMap[evt.target.value]) {
       case constants.offerTypesMap.flat:
@@ -67,6 +80,7 @@ window.form = (function () {
   };
 
   var setAdFromListeners = function () {
+    adForm.addEventListener('submit', onAdFormSubmit);
     adTypeSelect.addEventListener('change', onChangeAdType);
     adTimeInInput.addEventListener('change', onChangeAdTime);
     adTimeOutInput.addEventListener('change', onChangeAdTime);
