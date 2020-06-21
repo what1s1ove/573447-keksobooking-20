@@ -12,6 +12,7 @@ window.form = (function () {
   var adTimeOutInput = adForm.querySelector('#timeout');
   var adRoomNumberSelect = adForm.querySelector('#room_number');
   var adCapacitySelect = adForm.querySelector('#capacity');
+  var adFormResetBtn = adForm.querySelector('.ad-form__reset');
   var cleanUpAdForm = null;
 
   var roomsToGuestsMap = {
@@ -31,44 +32,6 @@ window.form = (function () {
     var coords = getPinCoords(x, y);
 
     adAddressInput.value = coords;
-  };
-
-  var onFormSendSuccess = function () {
-    window.modals.renderSuccess();
-    window.main.toggleAppStatus(false);
-  };
-
-  var onFormSendFailure = function (message) {
-    window.modals.renderError(message);
-  };
-
-
-  var onAdFormSubmit = function (evt) {
-    var formData = new FormData(adForm);
-
-    window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
-
-    evt.preventDefault();
-  };
-
-  var onAdFormChange = function (evt) {
-    var target = evt.target;
-
-    switch (target.name) {
-      case adTimeInInput.name:
-      case adTimeOutInput.name:
-        changeAdTime(evt);
-        break;
-      case adCapacitySelect.name:
-      case adRoomNumberSelect.name:
-        changeCapacity();
-        break;
-      case adTypeSelect.name:
-        changeAdType();
-        break;
-      default:
-        return;
-    }
   };
 
   var changeAdType = function () {
@@ -109,13 +72,59 @@ window.form = (function () {
     );
   };
 
+  var onFormSendSuccess = function () {
+    window.modals.renderSuccess();
+    window.main.toggleAppStatus(false);
+  };
+
+  var onFormSendFailure = function (message) {
+    window.modals.renderError(message);
+  };
+
+
+  var onAdFormSubmit = function (evt) {
+    var formData = new FormData(adForm);
+
+    window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
+
+    evt.preventDefault();
+  };
+
+  var onAdFormChange = function (evt) {
+    var target = evt.target;
+
+    switch (target.name) {
+      case adTimeInInput.name:
+      case adTimeOutInput.name:
+        changeAdTime(evt);
+        break;
+      case adCapacitySelect.name:
+      case adRoomNumberSelect.name:
+        changeCapacity();
+        break;
+      case adTypeSelect.name:
+        changeAdType();
+        break;
+      default:
+        return;
+    }
+  };
+
+  var onAdFormReset = function (evt) {
+    evt.preventDefault();
+
+    window.main.toggleAppStatus(false);
+  };
+
   var setAdFromListeners = function () {
     adForm.addEventListener('submit', onAdFormSubmit);
     adForm.addEventListener('change', onAdFormChange);
+    adFormResetBtn.addEventListener('click', onAdFormReset);
 
     return function () {
       adForm.removeEventListener('submit', onAdFormSubmit);
       adForm.removeEventListener('change', onAdFormChange);
+      adFormResetBtn.removeEventListener('click', onAdFormReset);
     };
   };
 
