@@ -9,9 +9,8 @@ window.map = (function () {
   var pinElement = pinTemplate.querySelector('.map__pin');
   var filterForm = document.querySelector('.map__filters');
   var filterFormElements = filterForm.querySelectorAll('select, fieldset');
-  var localOffers = [];
 
-  var renderPin = function (offerData, template) {
+  var renderPin = function (offerData, offerIdx, template) {
     var pin = template.cloneNode(true);
 
     var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
@@ -23,7 +22,7 @@ window.map = (function () {
     pin.querySelector('img').src = offerData.author.avatar;
     pin.querySelector('img').alt = offerData.offer.title;
 
-    pin.dataset.id = offerData.id;
+    pin.dataset.id = offerIdx;
 
     return pin;
   };
@@ -31,14 +30,14 @@ window.map = (function () {
   var renderPins = function (offers, container) {
     var fragment = document.createDocumentFragment();
 
-    offers.forEach(function (offer) {
-      fragment.appendChild(renderPin(offer, pinElement));
+    offers.forEach(function (offer, idx) {
+      fragment.appendChild(renderPin(offer, idx, pinElement));
     });
 
     container.appendChild(fragment);
   };
 
-  var initMapPinsListeners = function (map) {
+  var initMapPinsListeners = function (map, offers) {
     map.addEventListener('click', function (evt) {
       var target = evt.target.closest('.map__pin');
 
@@ -46,20 +45,25 @@ window.map = (function () {
         return;
       }
 
-      var activeOffer = helpers.getItemById(localOffers, target.getAttribute('data-id'));
+      var offerId = target.getAttribute('data-id');
+      var activeOffer = offers[offerId];
 
-      window.main.openAdPopup(activeOffer);
+      window.card.openPopup(activeOffer);
     });
   };
 
-  var activeMap = function (offers) {
+  var onLoadOfferSuccess = function (offers) {
+    renderPins(offers, mapPins);
+
+    initMapPinsListeners(mapPins, offers);
+  };
+
+  var onLoadOfferFailure = function () {};
+
+  var activeMap = function () {
     mainMap.classList.remove('map--faded');
 
-    localOffers = offers;
-
-    renderPins(localOffers, mapPins);
-
-    initMapPinsListeners(mapPins);
+    window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
 
     helpers.toggleElementsDisabled(filterFormElements, false);
   };

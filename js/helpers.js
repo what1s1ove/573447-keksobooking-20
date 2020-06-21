@@ -30,14 +30,6 @@ window.helpers = (function () {
     return shuffledArray.splice(0, randomIndex);
   };
 
-  var getItemById = function (arr, id) {
-    var itemById = arr.find(function (it) {
-      return it.id === id;
-    });
-
-    return itemById;
-  };
-
   var toggleElementsDisabled = function (elements, isDisabled) {
     elements.forEach(function (it) {
       it.disabled = isDisabled;
@@ -66,7 +58,6 @@ window.helpers = (function () {
     getShuffledArray: getShuffledArray,
     getRandomNumber: getRandomNumber,
     getRandomItems: getRandomItems,
-    getItemById: getItemById,
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
