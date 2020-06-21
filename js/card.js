@@ -77,6 +77,9 @@ window.card = (function () {
 
     popupOfferCloseBtn.removeEventListener('click', popupOfferCloseBtn);
     document.removeEventListener('keydown', onPopupEscPress);
+
+    popupOffer = null;
+    popupOfferCloseBtn = null;
   };
 
   var openPopup = function (offer) {
@@ -92,7 +95,14 @@ window.card = (function () {
     document.addEventListener('keydown', onPopupEscPress);
   };
 
+  var toggleCardStatus = function (isActive) {
+    if (!isActive && popupOffer) {
+      closePopup();
+    }
+  };
+
   return {
+    toggleStatus: toggleCardStatus,
     openPopup: openPopup
   };
 })();
