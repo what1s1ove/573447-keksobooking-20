@@ -1,14 +1,13 @@
 'use strict';
 
 window.map = (function () {
+  var OFFERS_COUNT = 5;
   var constants = window.common;
-  var helpers = window.helpers;
   var mainMap = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content;
   var pinElement = pinTemplate.querySelector('.map__pin');
-  var filterForm = document.querySelector('.map__filters');
-  var filterFormElements = filterForm.querySelectorAll('select, fieldset');
+  var localOffers = [];
 
   var getTruthOffers = function (offers) {
     var truthOffers = offers.filter(function (it) {
@@ -18,6 +17,43 @@ window.map = (function () {
     });
 
     return truthOffers;
+  };
+
+  var getMappedOffers = function (offers) {
+    var mappedOffers = offers.map(function (it, idx) {
+      var mappedOffer = Object.assign(it, {id: idx});
+
+      return mappedOffer;
+    });
+
+    return mappedOffers;
+  };
+
+  var renderPin = function (offerData, template) {
+    var pin = template.cloneNode(true);
+
+    var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
+    var pinCoordsY = offerData.location.y - constants.PIN_SIZES.HEIGHT;
+
+    pin.style.left = pinCoordsX + 'px';
+    pin.style.top = pinCoordsY + 'px';
+
+    pin.querySelector('img').src = offerData.author.avatar;
+    pin.querySelector('img').alt = offerData.offer.title;
+
+    pin.dataset.id = offerData.id;
+
+    return pin;
+  };
+
+  var renderPins = function (offers) {
+    var fragment = document.createDocumentFragment();
+
+    offers.forEach(function (offer) {
+      fragment.appendChild(renderPin(offer, pinElement));
+    });
+
+    mapPins.appendChild(fragment);
   };
 
   var removePins = function (pins) {
@@ -36,31 +72,14 @@ window.map = (function () {
     window.card.close();
   };
 
-  var renderPin = function (offerData, offerIdx, template) {
-    var pin = template.cloneNode(true);
+  var updatePins = function () {
+    clearMap();
 
-    var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
-    var pinCoordsY = offerData.location.y - constants.PIN_SIZES.HEIGHT;
+    var filteredOffers = window.filter.getFilteredOffers(localOffers);
 
-    pin.style.left = pinCoordsX + 'px';
-    pin.style.top = pinCoordsY + 'px';
+    var cutOffers = filteredOffers.slice(0, OFFERS_COUNT);
 
-    pin.querySelector('img').src = offerData.author.avatar;
-    pin.querySelector('img').alt = offerData.offer.title;
-
-    pin.dataset.id = offerIdx;
-
-    return pin;
-  };
-
-  var renderPins = function (offers, container) {
-    var fragment = document.createDocumentFragment();
-
-    offers.forEach(function (offer, idx) {
-      fragment.appendChild(renderPin(offer, idx, pinElement));
-    });
-
-    container.appendChild(fragment);
+    renderPins(cutOffers);
   };
 
   var initMapPinsListeners = function (map, offers) {
@@ -80,10 +99,15 @@ window.map = (function () {
 
   var onLoadOfferSuccess = function (offers) {
     var truthOffers = getTruthOffers(offers);
+    var mappedOffers = getMappedOffers(truthOffers);
 
-    renderPins(truthOffers, mapPins);
+    localOffers = mappedOffers;
+
+    updatePins();
 
     initMapPinsListeners(mapPins, truthOffers);
+
+    window.filter.toggleStatus(true);
   };
 
   var onLoadOfferFailure = function (message) {
@@ -93,21 +117,22 @@ window.map = (function () {
   var toggleMapStatus = function (isActive) {
     mainMap.classList.toggle('map--faded');
 
-    helpers.toggleElementsDisabled(filterFormElements, !isActive);
-
     if (isActive) {
       window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
     } else {
       clearMap();
+
+      window.filter.toggleStatus(isActive);
     }
   };
 
   var initMap = function () {
-    helpers.toggleElementsDisabled(filterFormElements, true);
+    window.filter.init();
   };
 
   return {
     init: initMap,
-    toggleStatus: toggleMapStatus
+    toggleStatus: toggleMapStatus,
+    updatePins: updatePins
   };
 })();
