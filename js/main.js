@@ -17,6 +17,5 @@ window.main = (function () {
 
   return {
     toggleAppStatus: toggleAppStatus
-
   };
 })();

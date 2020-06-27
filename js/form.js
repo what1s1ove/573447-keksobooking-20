@@ -105,8 +105,6 @@ window.form = (function () {
       case adTypeSelect.name:
         changeAdType();
         break;
-      default:
-        return;
     }
   };
 
