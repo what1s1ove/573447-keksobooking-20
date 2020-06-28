@@ -8,17 +8,17 @@ window.common = (function () {
     bungalo: 'Бунгало'
   };
 
-  var PIN_SIZES = {
+  var PinSize = {
     WIDTH: 50,
     HEIGHT: 70,
   };
 
-  var MARKER_SIZES = {
+  var MarkerSize = {
     WIDTH: 66,
     HEIGHT: 80,
   };
 
-  var ADS_LOCATION_COORDS = {
+  var AdsLocationCoord = {
     X: {
       MIN: 0,
       MAX: 1200
@@ -30,9 +30,9 @@ window.common = (function () {
   };
 
   return {
-    PIN_SIZES: PIN_SIZES,
-    MARKER_SIZES: MARKER_SIZES,
-    ADS_LOCATION_COORDS: ADS_LOCATION_COORDS,
+    PinSize: PinSize,
+    MarkerSize: MarkerSize,
+    AdsLocationCoord: AdsLocationCoord,
     offerTypesMap: offerTypesMap
   };
 })();

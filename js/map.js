@@ -33,8 +33,8 @@ window.map = (function () {
   var renderPin = function (offerData, template) {
     var pin = template.cloneNode(true);
 
-    var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
-    var pinCoordsY = offerData.location.y - constants.PIN_SIZES.HEIGHT;
+    var pinCoordsX = offerData.location.x - constants.PinSize.WIDTH / 2;
+    var pinCoordsY = offerData.location.y - constants.PinSize.HEIGHT;
 
     pin.style.left = pinCoordsX + 'px';
     pin.style.top = pinCoordsY + 'px';
