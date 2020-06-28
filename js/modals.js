@@ -6,27 +6,26 @@ window.modals = (function () {
   var successElement = successTemplate.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content;
   var errorElement = errorTemplate.querySelector('.error');
-  var openedModal = null;
-
-  var closeModal = function () {
-    openedModal.remove();
-    openedModal = null;
-
-    document.removeEventListener('keydown', onPopupEscPress);
-    document.removeEventListener('click', onOverlayClick);
-  };
-
-  var onPopupEscPress = function (evt) {
-    helpers.checkIsEscEvent(evt, closeModal);
-  };
-
-  var onOverlayClick = function () {
-    closeModal();
-  };
 
 
-  var initModal = function (modal) {
-    openedModal = modal;
+  var initModal = function (modal, content) {
+    var closeModal = function () {
+      modal.remove();
+
+      document.removeEventListener('keydown', onPopupEscPress);
+      document.removeEventListener('click', onOverlayClick);
+    };
+
+    var onPopupEscPress = function (evt) {
+      helpers.checkIsEscEvent(evt, closeModal);
+    };
+
+    var onOverlayClick = function (evt) {
+
+      if (evt.target !== content) {
+        closeModal();
+      }
+    };
 
     document.querySelector('main').append(modal);
 
@@ -36,16 +35,18 @@ window.modals = (function () {
 
   var renderSuccessModal = function () {
     var modalSuccess = successElement.cloneNode(true);
+    var contentElement = modalSuccess.querySelector('.success__message');
 
-    initModal(modalSuccess);
+    initModal(modalSuccess, contentElement);
   };
 
   var renderErrorModal = function (message) {
     var modalError = errorElement.cloneNode(true);
+    var contentElement = modalError.querySelector('.error__message');
 
-    modalError.querySelector('.error__message').textContent = message;
+    contentElement.textContent = message;
 
-    initModal(modalError);
+    initModal(modalError, contentElement);
   };
 
   return {
