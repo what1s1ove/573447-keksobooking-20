@@ -91,8 +91,6 @@ window.filter = (function () {
 
     return function () {
       filter.removeEventListener('change', onChangeForm);
-
-      filter.reset();
     };
   };
 
@@ -103,6 +101,8 @@ window.filter = (function () {
       cleanUpFilter = initFormListeners();
     } else {
       cleanUpFilter();
+
+      filter.reset();
     }
   };
 
