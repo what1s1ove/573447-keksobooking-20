@@ -28,7 +28,7 @@ window.modals = (function () {
   var initModal = function (modal) {
     openedModal = modal;
 
-    document.body.append(modal);
+    document.querySelector('main').append(modal);
 
     document.addEventListener('keydown', onPopupEscPress);
     document.addEventListener('click', onOverlayClick);
