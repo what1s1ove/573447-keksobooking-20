@@ -6,7 +6,7 @@ window.card = (function () {
   var mapFilter = document.querySelector('.map__filters-container');
   var popupOfferTemplate = document.querySelector('#card').content;
   var popupOfferElement = popupOfferTemplate.querySelector('.map__card');
-  var popupOfferElementPhoto = popupOfferTemplate.querySelector('.popup__photo');
+  var popupOfferElementImg = popupOfferTemplate.querySelector('.popup__photo');
   var popupOffer = null;
   var popupOfferCloseBtn = null;
 
@@ -28,7 +28,7 @@ window.card = (function () {
     var fragment = document.createDocumentFragment();
 
     photos.forEach(function (it) {
-      var image = popupOfferElementPhoto.cloneNode(true);
+      var image = popupOfferElementImg.cloneNode(true);
 
       image.src = it;
 
@@ -75,6 +75,8 @@ window.card = (function () {
   var closePopup = function () {
     if (popupOffer) {
       popupOffer.remove();
+
+      window.map.removeActivePinClass();
 
       popupOfferCloseBtn.removeEventListener('click', popupOfferCloseBtn);
       document.removeEventListener('keydown', onPopupEscPress);

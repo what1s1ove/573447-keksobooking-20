@@ -2,6 +2,7 @@
 
 window.map = (function () {
   var OFFERS_COUNT = 5;
+  var ACTIVE_PIN_CLASS = 'map__pin--active';
   var constants = window.common;
   var helpers = window.helpers;
   var mainMap = document.querySelector('.map');
@@ -57,6 +58,14 @@ window.map = (function () {
     mapPins.appendChild(fragment);
   };
 
+  var removeActivePinClass = function () {
+    var pin = mapPins.querySelector('.' + ACTIVE_PIN_CLASS);
+
+    if (pin) {
+      pin.classList.remove(ACTIVE_PIN_CLASS);
+    }
+  };
+
   var removePins = function (pins) {
     pins.forEach(function (it) {
       if (it.hasAttribute('data-id')) {
@@ -94,6 +103,8 @@ window.map = (function () {
     var activeOffer = helpers.getItemById(localOffers, offerId);
 
     window.card.open(activeOffer);
+
+    target.classList.add(ACTIVE_PIN_CLASS);
   };
 
   var onLoadOfferSuccess = function (offers) {
@@ -134,6 +145,7 @@ window.map = (function () {
   return {
     init: initMap,
     toggleStatus: toggleMapStatus,
-    updatePins: updatePins
+    updatePins: updatePins,
+    removeActivePinClass: removeActivePinClass
   };
 })();
