@@ -3,6 +3,7 @@
 window.map = (function () {
   var OFFERS_COUNT = 5;
   var constants = window.common;
+  var helpers = window.helpers;
   var mainMap = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content;
@@ -21,7 +22,7 @@ window.map = (function () {
 
   var getMappedOffers = function (offers) {
     var mappedOffers = offers.map(function (it, idx) {
-      var mappedOffer = Object.assign(it, {id: idx});
+      var mappedOffer = Object.assign(it, {id: idx.toString()});
 
       return mappedOffer;
     });
@@ -82,19 +83,17 @@ window.map = (function () {
     renderPins(cutOffers);
   };
 
-  var initMapPinsListeners = function (map, offers) {
-    map.addEventListener('click', function (evt) {
-      var target = evt.target.closest('.map__pin');
+  var onMapPinsClick = function (evt) {
+    var target = evt.target.closest('.map__pin');
 
-      if (!target || !target.hasAttribute('data-id')) {
-        return;
-      }
+    if (!target || !target.hasAttribute('data-id')) {
+      return;
+    }
 
-      var offerId = target.getAttribute('data-id');
-      var activeOffer = offers[offerId];
+    var offerId = target.getAttribute('data-id');
+    var activeOffer = helpers.getItemById(localOffers, offerId);
 
-      window.card.open(activeOffer);
-    });
+    window.card.open(activeOffer);
   };
 
   var onLoadOfferSuccess = function (offers) {
@@ -105,7 +104,7 @@ window.map = (function () {
 
     updatePins();
 
-    initMapPinsListeners(mapPins, truthOffers);
+    mapPins.addEventListener('click', onMapPinsClick);
 
     window.filter.toggleStatus(true);
   };
@@ -121,6 +120,8 @@ window.map = (function () {
       window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
     } else {
       clearMap();
+
+      mapPins.removeEventListener('click', onMapPinsClick);
 
       window.filter.toggleStatus(isActive);
     }

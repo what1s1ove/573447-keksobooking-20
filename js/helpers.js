@@ -5,6 +5,14 @@ window.helpers = (function () {
   var ENTER_KEY = 'Enter';
   var MAIN_MOUSE_BTN_KEY = 0;
 
+  var getItemById = function (arr, id) {
+    var itemById = arr.find(function (it) {
+      return it.id === id;
+    });
+
+    return itemById;
+  };
+
   var toggleElementsDisabled = function (elements, isDisabled) {
     elements.forEach(function (it) {
       it.disabled = isDisabled;
@@ -41,6 +49,7 @@ window.helpers = (function () {
   };
 
   return {
+    getItemById: getItemById,
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
