@@ -1,7 +1,9 @@
 'use strict';
 
 window.filter = (function () {
+  var DEBOUNCE_INTERVAL = 500;
   var CONTROL_DEFAULT_VALUE = 'any';
+
   var helpers = window.helpers;
   var filter = document.querySelector('.map__filters');
   var filterFormElements = filter.querySelectorAll('select, fieldset');
@@ -80,9 +82,9 @@ window.filter = (function () {
     return filteredOffers;
   };
 
-  var onChangeForm = function () {
+  var onChangeForm = helpers.debounce(function () {
     window.map.updatePins();
-  };
+  }, DEBOUNCE_INTERVAL);
 
   var initFormListeners = function () {
     filter.addEventListener('change', onChangeForm);

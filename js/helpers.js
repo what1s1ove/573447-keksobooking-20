@@ -54,6 +54,22 @@ window.helpers = (function () {
     }
   };
 
+  var debounce = function (cb, interval) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+
+      if (lastTimeout) {
+        clearInterval(lastTimeout);
+      }
+
+      lastTimeout = setTimeout(function () {
+        cb.apply(null, parameters);
+      }, interval);
+    };
+  };
+
   return {
     getShuffledArray: getShuffledArray,
     getRandomNumber: getRandomNumber,
@@ -61,6 +77,7 @@ window.helpers = (function () {
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
-    checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent
+    checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent,
+    debounce: debounce
   };
 })();
