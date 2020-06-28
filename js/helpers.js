@@ -54,6 +54,17 @@ window.helpers = (function () {
     }
   };
 
+  var setImagePreview = function (control, imgPreview) {
+    var file = control.files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener('load', function () {
+      imgPreview.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+  };
+
   return {
     getShuffledArray: getShuffledArray,
     getRandomNumber: getRandomNumber,
@@ -61,6 +72,7 @@ window.helpers = (function () {
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
-    checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent
+    checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent,
+    setImagePreview: setImagePreview
   };
 })();

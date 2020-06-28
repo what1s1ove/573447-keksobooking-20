@@ -5,6 +5,8 @@ window.form = (function () {
   var helpers = window.helpers;
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
+  var adAvatar = adForm.querySelector('#avatar');
+  var adAvatarImg = adForm.querySelector('.ad-form-header__preview img');
   var adAddressInput = adForm.querySelector('#address');
   var adTypeSelect = document.querySelector('#type');
   var adPriceInput = document.querySelector('#price');
@@ -12,7 +14,8 @@ window.form = (function () {
   var adTimeOutInput = adForm.querySelector('#timeout');
   var adRoomNumberSelect = adForm.querySelector('#room_number');
   var adCapacitySelect = adForm.querySelector('#capacity');
-  var adFormResetBtn = adForm.querySelector('.ad-form__reset');
+  var adHousingImgLoader = adForm.querySelector('#images');
+  var adHousingImgContainer = adForm.querySelector('.ad-form__photo');
   var cleanUpAdForm = null;
 
   var roomsToGuestsMap = {
@@ -72,6 +75,31 @@ window.form = (function () {
     );
   };
 
+  var clearAvatar = function () {
+    var defaultAvatarPath = 'img/muffin-grey.svg';
+
+    adAvatarImg.src = defaultAvatarPath;
+  };
+
+  var clearHousingImg = function () {
+    adHousingImgContainer.innerHTML = '';
+  };
+
+  var clearFormImages = function () {
+    clearAvatar();
+    clearHousingImg();
+  };
+
+  var outputHousingImg = function () {
+    var img = document.createElement('img');
+
+    clearHousingImg();
+
+    helpers.setImagePreview(adHousingImgLoader, img);
+
+    adHousingImgContainer.append(img);
+  };
+
   var onFormSendSuccess = function () {
     window.modals.renderSuccess();
     window.main.toggleAppStatus(false);
@@ -90,10 +118,17 @@ window.form = (function () {
     evt.preventDefault();
   };
 
-  var onAdFormChange = function (evt) {
-    var target = evt.target;
+  var onAdFormReset = function (evt) {
+    evt.preventDefault();
 
-    switch (target.name) {
+    window.main.toggleAppStatus(false);
+  };
+
+  var onAdFormChange = function (evt) {
+    switch (evt.target.name) {
+      case adAvatar.name:
+        helpers.setImagePreview(adAvatar, adAvatarImg);
+        break;
       case adTimeInInput.name:
       case adTimeOutInput.name:
         changeAdTime(evt);
@@ -105,24 +140,20 @@ window.form = (function () {
       case adTypeSelect.name:
         changeAdType();
         break;
+      case adHousingImgLoader.name:
+        outputHousingImg();
     }
-  };
-
-  var onAdFormReset = function (evt) {
-    evt.preventDefault();
-
-    window.main.toggleAppStatus(false);
   };
 
   var setAdFromListeners = function () {
     adForm.addEventListener('submit', onAdFormSubmit);
     adForm.addEventListener('change', onAdFormChange);
-    adFormResetBtn.addEventListener('click', onAdFormReset);
+    adForm.addEventListener('reset', onAdFormReset);
 
     return function () {
       adForm.removeEventListener('submit', onAdFormSubmit);
       adForm.removeEventListener('change', onAdFormChange);
-      adFormResetBtn.removeEventListener('click', onAdFormReset);
+      adForm.removeEventListener('reset', onAdFormReset);
     };
   };
 
@@ -135,6 +166,8 @@ window.form = (function () {
       cleanUpAdForm = setAdFromListeners();
     } else {
       cleanUpAdForm();
+
+      clearFormImages();
 
       adForm.reset();
     }
