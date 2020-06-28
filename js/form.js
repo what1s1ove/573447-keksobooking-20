@@ -100,6 +100,14 @@ window.form = (function () {
     adHousingImgContainer.append(img);
   };
 
+  var validateFormElements = function () {
+    var elements = Array.from(adForm.elements);
+
+    elements.forEach(function (it) {
+      it.style.borderColor = (!it.validity.valid || it.validity.customError) ? 'red' : '';
+    });
+  };
+
   var onFormSendSuccess = function () {
     window.modals.renderSuccess();
     window.main.toggleAppStatus(false);
@@ -113,6 +121,8 @@ window.form = (function () {
   var onAdFormSubmit = function (evt) {
     var formData = new FormData(adForm);
 
+    validateFormElements();
+
     window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
 
     evt.preventDefault();
@@ -122,6 +132,10 @@ window.form = (function () {
     evt.preventDefault();
 
     window.main.toggleAppStatus(false);
+  };
+
+  var inAdFormInvalid = function () {
+    validateFormElements();
   };
 
   var onAdFormChange = function (evt) {
@@ -147,13 +161,15 @@ window.form = (function () {
 
   var setAdFromListeners = function () {
     adForm.addEventListener('submit', onAdFormSubmit);
-    adForm.addEventListener('change', onAdFormChange);
     adForm.addEventListener('reset', onAdFormReset);
+    adForm.addEventListener('change', onAdFormChange);
+    adForm.addEventListener('invalid', inAdFormInvalid, true);
 
     return function () {
       adForm.removeEventListener('submit', onAdFormSubmit);
-      adForm.removeEventListener('change', onAdFormChange);
       adForm.removeEventListener('reset', onAdFormReset);
+      adForm.removeEventListener('change', onAdFormChange);
+      adForm.removeEventListener('invalid', inAdFormInvalid, true);
     };
   };
 
