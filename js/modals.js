@@ -20,12 +20,6 @@ window.modals = (function () {
     helpers.checkIsEscEvent(evt, closeModal);
   };
 
-  var onCloseClick = function (evt) {
-    evt.target.removeEventListener('click', onCloseClick);
-
-    closeModal();
-  };
-
   var onOverlayClick = function () {
     closeModal();
   };
@@ -48,11 +42,8 @@ window.modals = (function () {
 
   var renderErrorModal = function (message) {
     var modalError = errorElement.cloneNode(true);
-    var errorMessage = modalError.querySelector('.error__message');
-    var closeBtn = modalError.querySelector('.error__button');
 
-    errorMessage.textContent = message;
-    closeBtn.addEventListener('click', onCloseClick);
+    modalError.querySelector('.error__message').textContent = message;
 
     initModal(modalError);
   };
