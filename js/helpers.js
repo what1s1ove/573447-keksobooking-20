@@ -48,12 +48,29 @@ window.helpers = (function () {
     reader.readAsDataURL(file);
   };
 
+  var debounce = function (cb, interval) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+
+      if (lastTimeout) {
+        clearInterval(lastTimeout);
+      }
+
+      lastTimeout = setTimeout(function () {
+        cb.apply(null, parameters);
+      }, interval);
+    };
+  };
+
   return {
     getItemById: getItemById,
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
     checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent,
-    setImagePreview: setImagePreview
+    setImagePreview: setImagePreview,
+    debounce: debounce
   };
 })();
