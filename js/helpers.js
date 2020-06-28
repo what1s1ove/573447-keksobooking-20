@@ -5,31 +5,6 @@ window.helpers = (function () {
   var ENTER_KEY = 'Enter';
   var MAIN_MOUSE_BTN_KEY = 0;
 
-  var getShuffledArray = function (arr) {
-    var copiedArray = arr.slice();
-
-    var shuffledArray = copiedArray.sort(function () {
-
-      return 0.5 - Math.random();
-    });
-
-    return shuffledArray;
-  };
-
-  var getRandomNumber = function (min, max) {
-    var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    return randomNumber;
-  };
-
-  var getRandomItems = function (arr) {
-    var randomIndex = getRandomNumber(0, arr.length);
-
-    var shuffledArray = getShuffledArray(arr);
-
-    return shuffledArray.splice(0, randomIndex);
-  };
-
   var toggleElementsDisabled = function (elements, isDisabled) {
     elements.forEach(function (it) {
       it.disabled = isDisabled;
@@ -66,9 +41,6 @@ window.helpers = (function () {
   };
 
   return {
-    getShuffledArray: getShuffledArray,
-    getRandomNumber: getRandomNumber,
-    getRandomItems: getRandomItems,
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
