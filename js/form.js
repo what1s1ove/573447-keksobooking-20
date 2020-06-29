@@ -19,11 +19,11 @@
   var adResetBtnNode = adFormNode.querySelector('.ad-form__reset');
   var cleanUpAdForm = null;
 
-  var roomsToGuestsMap = {
-    1: [1],
-    2: [1, 2],
-    3: [1, 2, 3],
-    100: [0]
+  var roomsToGuests = {
+    '1': [1],
+    '2': [1, 2],
+    '3': [1, 2, 3],
+    '100': [0]
   };
 
   var getPinCoords = function (x, y) {
@@ -66,7 +66,7 @@
   };
 
   var changeCapacity = function () {
-    var roomGuests = roomsToGuestsMap[adRoomNumberNode.value];
+    var roomGuests = roomsToGuests[adRoomNumberNode.value];
     var isAllow = roomGuests.includes(Number(adCapacityNode.value));
 
     adCapacityNode.setCustomValidity(
