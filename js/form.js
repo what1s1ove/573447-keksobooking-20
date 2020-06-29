@@ -16,6 +16,7 @@
   var adCapacityNode = adFormNode.querySelector('#capacity');
   var adHousingImgLoaderNode = adFormNode.querySelector('#images');
   var adHousingImgOutputNode = adFormNode.querySelector('.ad-form__photo');
+  var adResetBtnNode = adFormNode.querySelector('.ad-form__reset');
   var cleanUpAdForm = null;
 
   var roomsToGuestsMap = {
@@ -128,7 +129,11 @@
     evt.preventDefault();
   };
 
-  var onAdFormReset = function () {
+  var onAdFormReset = function (evt) {
+    evt.preventDefault();
+
+    adFormNode.reset();
+
     window.main.toggleAppStatus(false);
   };
 
@@ -159,15 +164,15 @@
 
   var setAdFromListeners = function () {
     adFormNode.addEventListener('submit', onAdFormSubmit);
-    adFormNode.addEventListener('reset', onAdFormReset);
     adFormNode.addEventListener('change', onAdFormChange);
     adFormNode.addEventListener('invalid', onAdFormInvalid, true);
+    adResetBtnNode.addEventListener('click', onAdFormReset);
 
     return function () {
       adFormNode.removeEventListener('submit', onAdFormSubmit);
-      adFormNode.removeEventListener('reset', onAdFormReset);
       adFormNode.removeEventListener('change', onAdFormChange);
       adFormNode.removeEventListener('invalid', onAdFormInvalid, true);
+      adResetBtnNode.removeEventListener('click', onAdFormReset);
     };
   };
 
@@ -179,13 +184,13 @@
     if (isActive) {
       cleanUpAdForm = setAdFromListeners();
     } else {
+      adFormNode.reset();
+
       cleanUpAdForm();
 
       clearFormImages();
 
       validateFormNodes(true);
-
-      adFormNode.reset();
     }
   };
 
