@@ -100,11 +100,11 @@
     adHousingImgOutputNode.append(img);
   };
 
-  var validateFormNodes = function () {
+  var validateFormNodes = function (isReset) {
     var nodes = Array.from(adFormNode.elements);
 
     nodes.forEach(function (it) {
-      it.style.borderColor = (!it.validity.valid || it.validity.customError) ? 'red' : '';
+      it.style.borderColor = ((!it.validity.valid || it.validity.customError) && !isReset) ? 'red' : '';
     });
   };
 
@@ -121,9 +121,9 @@
   var onAdFormSubmit = function (evt) {
     var formData = new FormData(adFormNode);
 
-    validateFormNodes();
-
     window.api.sendAd(onFormSendSuccess, onFormSendFailure, formData);
+
+    validateFormNodes(true);
 
     evt.preventDefault();
   };
@@ -133,7 +133,7 @@
   };
 
   var onAdFormInvalid = function () {
-    validateFormNodes();
+    validateFormNodes(false);
   };
 
   var onAdFormChange = function (evt) {
@@ -182,6 +182,8 @@
       cleanUpAdForm();
 
       clearFormImages();
+
+      validateFormNodes(true);
 
       adFormNode.reset();
     }
