@@ -1,6 +1,6 @@
 'use strict';
 
-window.helpers = (function () {
+(function () {
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
   var MAIN_MOUSE_BTN_KEY = 0;
@@ -64,7 +64,7 @@ window.helpers = (function () {
     };
   };
 
-  return {
+  window.helpers = {
     getItemById: getItemById,
     toggleElementsDisabled: toggleElementsDisabled,
     checkIsEscEvent: checkIsEscEvent,

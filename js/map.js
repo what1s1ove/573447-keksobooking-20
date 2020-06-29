@@ -1,6 +1,6 @@
 'use strict';
 
-window.map = (function () {
+(function () {
   var OFFERS_COUNT = 5;
   var ACTIVE_PIN_CLASS = 'map__pin--active';
   var constants = window.common;
@@ -142,7 +142,7 @@ window.map = (function () {
     window.filter.init();
   };
 
-  return {
+  window.map = {
     init: initMap,
     toggleStatus: toggleMapStatus,
     updatePins: updatePins,

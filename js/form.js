@@ -1,6 +1,6 @@
 'use strict';
 
-window.form = (function () {
+(function () {
   var constants = window.common;
   var helpers = window.helpers;
   var adForm = document.querySelector('.ad-form');
@@ -193,7 +193,7 @@ window.form = (function () {
     helpers.toggleElementsDisabled(adFormElements, true);
   };
 
-  return {
+  window.form = {
     init: initForm,
     toggleStatus: toggleFormStatus,
     setAddressCoords: setAddressCoords

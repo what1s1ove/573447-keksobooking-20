@@ -1,6 +1,6 @@
 'use strict';
 
-window.pin = (function () {
+(function () {
   var constants = window.common;
   var helpers = window.helpers;
   var mainPin = document.querySelector('.map__pin--main');
@@ -120,7 +120,7 @@ window.pin = (function () {
     setDefaultCoords();
   };
 
-  return {
+  window.pin = {
     init: initPin,
     toggleStatus: togglePinStatus
   };

@@ -1,6 +1,6 @@
 'use strict';
 
-window.common = (function () {
+(function () {
   var offerTypesMap = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -29,7 +29,7 @@ window.common = (function () {
     }
   };
 
-  return {
+  window.common = {
     PinSize: PinSize,
     MarkerSize: MarkerSize,
     AdsLocationCoord: AdsLocationCoord,

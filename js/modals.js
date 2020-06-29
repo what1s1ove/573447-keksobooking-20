@@ -1,6 +1,6 @@
 'use strict';
 
-window.modals = (function () {
+(function () {
   var helpers = window.helpers;
   var successTemplate = document.querySelector('#success').content;
   var successElement = successTemplate.querySelector('.success');
@@ -49,7 +49,7 @@ window.modals = (function () {
     initModal(modalError, contentElement);
   };
 
-  return {
+  window.modals = {
     renderSuccess: renderSuccessModal,
     renderError: renderErrorModal
   };

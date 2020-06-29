@@ -1,6 +1,6 @@
 'use strict';
 
-window.filter = (function () {
+(function () {
   var DEBOUNCE_INTERVAL = 500;
   var CONTROL_DEFAULT_VALUE = 'any';
 
@@ -110,7 +110,7 @@ window.filter = (function () {
     helpers.toggleElementsDisabled(filterFormElements, true);
   };
 
-  return {
+  window.filter = {
     init: initFilter,
     toggleStatus: toggleFilterStatus,
     getFilteredOffers: getFilteredOffers

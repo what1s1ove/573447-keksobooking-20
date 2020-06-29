@@ -1,6 +1,6 @@
 'use strict';
 
-window.main = (function () {
+(function () {
   var toggleAppStatus = function (isActive) {
     window.map.toggleStatus(isActive);
     window.form.toggleStatus(isActive);
@@ -15,7 +15,7 @@ window.main = (function () {
 
   initApp();
 
-  return {
+  window.main = {
     toggleAppStatus: toggleAppStatus
   };
 })();

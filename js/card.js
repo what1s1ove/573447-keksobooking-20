@@ -1,6 +1,6 @@
 'use strict';
 
-window.card = (function () {
+(function () {
   var constants = window.common;
   var helpers = window.helpers;
   var mapFilter = document.querySelector('.map__filters-container');
@@ -97,7 +97,7 @@ window.card = (function () {
     document.addEventListener('keydown', onPopupEscPress);
   };
 
-  return {
+  window.card = {
     open: openPopup,
     close: closePopup
   };
