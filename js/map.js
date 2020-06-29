@@ -5,10 +5,10 @@
   var ACTIVE_PIN_CLASS = 'map__pin--active';
   var constants = window.common;
   var helpers = window.helpers;
-  var mainMap = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('#pin').content;
-  var pinElement = pinTemplate.querySelector('.map__pin');
+  var mainMapNode = document.querySelector('.map');
+  var mapPinsNode = document.querySelector('.map__pins');
+  var pinTemplateNode = document.querySelector('#pin').content;
+  var pinNode = pinTemplateNode.querySelector('.map__pin');
   var localOffers = [];
 
   var getTruthOffers = function (offers) {
@@ -52,14 +52,14 @@
     var fragment = document.createDocumentFragment();
 
     offers.forEach(function (offer) {
-      fragment.appendChild(renderPin(offer, pinElement));
+      fragment.appendChild(renderPin(offer, pinNode));
     });
 
-    mapPins.appendChild(fragment);
+    mapPinsNode.appendChild(fragment);
   };
 
   var removeActivePinClass = function () {
-    var pin = mapPins.querySelector('.' + ACTIVE_PIN_CLASS);
+    var pin = mapPinsNode.querySelector('.' + ACTIVE_PIN_CLASS);
 
     if (pin) {
       pin.classList.remove(ACTIVE_PIN_CLASS);
@@ -75,7 +75,7 @@
   };
 
   var clearMap = function () {
-    var pins = mapPins.querySelectorAll('.map__pin');
+    var pins = mapPinsNode.querySelectorAll('.map__pin');
 
     removePins(pins);
 
@@ -115,7 +115,7 @@
 
     updatePins();
 
-    mapPins.addEventListener('click', onMapPinsClick);
+    mapPinsNode.addEventListener('click', onMapPinsClick);
 
     window.filter.toggleStatus(true);
   };
@@ -125,14 +125,14 @@
   };
 
   var toggleMapStatus = function (isActive) {
-    mainMap.classList.toggle('map--faded');
+    mainMapNode.classList.toggle('map--faded');
 
     if (isActive) {
       window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
     } else {
       clearMap();
 
-      mapPins.removeEventListener('click', onMapPinsClick);
+      mapPinsNode.removeEventListener('click', onMapPinsClick);
 
       window.filter.toggleStatus(isActive);
     }

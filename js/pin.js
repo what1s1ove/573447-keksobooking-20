@@ -3,12 +3,12 @@
 (function () {
   var constants = window.common;
   var helpers = window.helpers;
-  var mainPin = document.querySelector('.map__pin--main');
+  var mainPinNode = document.querySelector('.map__pin--main');
   var cleanUpMainPin = null;
 
   var pinInitCoords = {
-    x: mainPin.offsetLeft,
-    y: mainPin.offsetTop,
+    x: mainPinNode.offsetLeft,
+    y: mainPinNode.offsetTop,
   };
 
   var activeApp = function () {
@@ -16,10 +16,10 @@
   };
 
   var setDefaultCoords = function () {
-    mainPin.style.top = pinInitCoords.y + 'px';
-    mainPin.style.left = pinInitCoords.x + 'px';
+    mainPinNode.style.top = pinInitCoords.y + 'px';
+    mainPinNode.style.left = pinInitCoords.x + 'px';
 
-    window.form.setAddressCoords(pinInitCoords.x + (mainPin.offsetWidth / 2), pinInitCoords.y + (mainPin.offsetHeight / 2));
+    window.form.setAddressCoords(pinInitCoords.x + (mainPinNode.offsetWidth / 2), pinInitCoords.y + (mainPinNode.offsetHeight / 2));
   };
 
   var onPinFirstClick = function (evt) {
@@ -52,8 +52,8 @@
       };
 
       var mainPinPosition = {
-        x: mainPin.offsetLeft - shift.x,
-        y: mainPin.offsetTop - shift.y
+        x: mainPinNode.offsetLeft - shift.x,
+        y: mainPinNode.offsetTop - shift.y
       };
 
       var Border = {
@@ -64,11 +64,11 @@
       };
 
       if (mainPinPosition.x >= Border.LEFT && mainPinPosition.x <= Border.RIGHT) {
-        mainPin.style.left = mainPinPosition.x + 'px';
+        mainPinNode.style.left = mainPinPosition.x + 'px';
       }
 
       if (mainPinPosition.y >= Border.TOP && mainPinPosition.y <= Border.BOTTOM) {
-        mainPin.style.top = mainPinPosition.y + 'px';
+        mainPinNode.style.top = mainPinPosition.y + 'px';
       }
 
       var pinCoords = {
@@ -93,12 +93,12 @@
   };
 
   var setPinInitListeners = function () {
-    mainPin.addEventListener('mousedown', onPinFirstClick);
-    mainPin.addEventListener('keydown', onPinEnterPress);
+    mainPinNode.addEventListener('mousedown', onPinFirstClick);
+    mainPinNode.addEventListener('keydown', onPinEnterPress);
 
     return function () {
-      mainPin.removeEventListener('mousedown', onPinFirstClick);
-      mainPin.removeEventListener('keydown', onPinEnterPress);
+      mainPinNode.removeEventListener('mousedown', onPinFirstClick);
+      mainPinNode.removeEventListener('keydown', onPinEnterPress);
     };
   };
 
@@ -113,7 +113,7 @@
   };
 
   var initPin = function () {
-    mainPin.addEventListener('mousedown', onMainPinMouseDown);
+    mainPinNode.addEventListener('mousedown', onMainPinMouseDown);
 
     cleanUpMainPin = setPinInitListeners();
 

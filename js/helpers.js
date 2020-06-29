@@ -13,8 +13,8 @@
     return itemById;
   };
 
-  var toggleElementsDisabled = function (elements, isDisabled) {
-    elements.forEach(function (it) {
+  var toggleNodesDisabled = function (nodes, isDisabled) {
+    nodes.forEach(function (it) {
       it.disabled = isDisabled;
     });
   };
@@ -66,7 +66,7 @@
 
   window.helpers = {
     getItemById: getItemById,
-    toggleElementsDisabled: toggleElementsDisabled,
+    toggleNodesDisabled: toggleNodesDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
     checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent,

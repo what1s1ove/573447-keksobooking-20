@@ -2,13 +2,13 @@
 
 (function () {
   var helpers = window.helpers;
-  var successTemplate = document.querySelector('#success').content;
-  var successElement = successTemplate.querySelector('.success');
-  var errorTemplate = document.querySelector('#error').content;
-  var errorElement = errorTemplate.querySelector('.error');
+  var successTemplateNode = document.querySelector('#success').content;
+  var successNode = successTemplateNode.querySelector('.success');
+  var errorTemplateNode = document.querySelector('#error').content;
+  var errorNode = errorTemplateNode.querySelector('.error');
 
 
-  var initModal = function (modal, content) {
+  var initModal = function (modal, contentNode) {
     var closeModal = function () {
       modal.remove();
 
@@ -22,7 +22,7 @@
 
     var onOverlayClick = function (evt) {
 
-      if (evt.target !== content) {
+      if (evt.target !== contentNode) {
         closeModal();
       }
     };
@@ -34,19 +34,19 @@
   };
 
   var renderSuccessModal = function () {
-    var modalSuccess = successElement.cloneNode(true);
-    var contentElement = modalSuccess.querySelector('.success__message');
+    var modalSuccess = successNode.cloneNode(true);
+    var contentNode = modalSuccess.querySelector('.success__message');
 
-    initModal(modalSuccess, contentElement);
+    initModal(modalSuccess, contentNode);
   };
 
   var renderErrorModal = function (message) {
-    var modalError = errorElement.cloneNode(true);
-    var contentElement = modalError.querySelector('.error__message');
+    var modalError = errorNode.cloneNode(true);
+    var contentNode = modalError.querySelector('.error__message');
 
-    contentElement.textContent = message;
+    contentNode.textContent = message;
 
-    initModal(modalError, contentElement);
+    initModal(modalError, contentNode);
   };
 
   window.modals = {
