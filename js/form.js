@@ -134,7 +134,7 @@
     window.main.toggleAppStatus(false);
   };
 
-  var inAdFormInvalid = function () {
+  var onAdFormInvalid = function () {
     validateFormElements();
   };
 
@@ -163,13 +163,13 @@
     adForm.addEventListener('submit', onAdFormSubmit);
     adForm.addEventListener('reset', onAdFormReset);
     adForm.addEventListener('change', onAdFormChange);
-    adForm.addEventListener('invalid', inAdFormInvalid, true);
+    adForm.addEventListener('invalid', onAdFormInvalid, true);
 
     return function () {
       adForm.removeEventListener('submit', onAdFormSubmit);
       adForm.removeEventListener('reset', onAdFormReset);
       adForm.removeEventListener('change', onAdFormChange);
-      adForm.removeEventListener('invalid', inAdFormInvalid, true);
+      adForm.removeEventListener('invalid', onAdFormInvalid, true);
     };
   };
 
