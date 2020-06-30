@@ -1,6 +1,6 @@
 'use strict';
 
-window.api = (function () {
+(function () {
   var BASE_URL = 'https://javascript.pages.academy/keksobooking';
   var MS_TIMEOUT = 10000;
   var StatusCode = {
@@ -36,7 +36,7 @@ window.api = (function () {
     xhr.send(data || null);
   };
 
-  return {
+  window.api = {
     getOffers: function (onSuccess, onError) {
       sendRequest('GET', '/data', onSuccess, onError);
     },

@@ -1,63 +1,55 @@
 'use strict';
 
-window.modals = (function () {
+(function () {
   var helpers = window.helpers;
-  var successTemplate = document.querySelector('#success').content;
-  var successElement = successTemplate.querySelector('.success');
-  var errorTemplate = document.querySelector('#error').content;
-  var errorElement = errorTemplate.querySelector('.error');
-  var openedModal = null;
-
-  var closeModal = function () {
-    openedModal.remove();
-    openedModal = null;
-
-    document.removeEventListener('keydown', onPopupEscPress);
-    document.removeEventListener('click', onOverlayClick);
-  };
-
-  var onPopupEscPress = function (evt) {
-    helpers.checkIsEscEvent(evt, closeModal);
-  };
-
-  var onCloseClick = function (evt) {
-    evt.target.removeEventListener('click', onCloseClick);
-
-    closeModal();
-  };
-
-  var onOverlayClick = function () {
-    closeModal();
-  };
+  var successTemplateNode = document.querySelector('#success').content;
+  var successNode = successTemplateNode.querySelector('.success');
+  var errorTemplateNode = document.querySelector('#error').content;
+  var errorNode = errorTemplateNode.querySelector('.error');
 
 
-  var initModal = function (modal) {
-    openedModal = modal;
+  var initModal = function (modal, contentNode) {
+    var closeModal = function () {
+      modal.remove();
 
-    document.body.append(modal);
+      document.removeEventListener('keydown', onPopupEscPress);
+      document.removeEventListener('click', onOverlayClick);
+    };
+
+    var onPopupEscPress = function (evt) {
+      helpers.checkIsEscEvent(evt, closeModal);
+    };
+
+    var onOverlayClick = function (evt) {
+
+      if (evt.target !== contentNode) {
+        closeModal();
+      }
+    };
+
+    document.querySelector('main').append(modal);
 
     document.addEventListener('keydown', onPopupEscPress);
     document.addEventListener('click', onOverlayClick);
   };
 
   var renderSuccessModal = function () {
-    var modalSuccess = successElement.cloneNode(true);
+    var modalSuccess = successNode.cloneNode(true);
+    var contentNode = modalSuccess.querySelector('.success__message');
 
-    initModal(modalSuccess);
+    initModal(modalSuccess, contentNode);
   };
 
   var renderErrorModal = function (message) {
-    var modalError = errorElement.cloneNode(true);
-    var errorMessage = modalError.querySelector('.error__message');
-    var closeBtn = modalError.querySelector('.error__button');
+    var modalError = errorNode.cloneNode(true);
+    var contentNode = modalError.querySelector('.error__message');
 
-    errorMessage.textContent = message;
-    closeBtn.addEventListener('click', onCloseClick);
+    contentNode.textContent = message;
 
-    initModal(modalError);
+    initModal(modalError, contentNode);
   };
 
-  return {
+  window.modals = {
     renderSuccess: renderSuccessModal,
     renderError: renderErrorModal
   };

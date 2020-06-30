@@ -1,12 +1,14 @@
 'use strict';
 
-window.map = (function () {
+(function () {
   var OFFERS_COUNT = 5;
+  var ACTIVE_PIN_CLASS = 'map__pin--active';
   var constants = window.common;
-  var mainMap = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('#pin').content;
-  var pinElement = pinTemplate.querySelector('.map__pin');
+  var helpers = window.helpers;
+  var mainMapNode = document.querySelector('.map');
+  var mapPinsNode = document.querySelector('.map__pins');
+  var pinTemplateNode = document.querySelector('#pin').content;
+  var pinNode = pinTemplateNode.querySelector('.map__pin');
   var localOffers = [];
 
   var getTruthOffers = function (offers) {
@@ -21,7 +23,7 @@ window.map = (function () {
 
   var getMappedOffers = function (offers) {
     var mappedOffers = offers.map(function (it, idx) {
-      var mappedOffer = Object.assign(it, {id: idx});
+      var mappedOffer = Object.assign(it, {id: idx.toString()});
 
       return mappedOffer;
     });
@@ -32,8 +34,8 @@ window.map = (function () {
   var renderPin = function (offerData, template) {
     var pin = template.cloneNode(true);
 
-    var pinCoordsX = offerData.location.x - constants.PIN_SIZES.WIDTH / 2;
-    var pinCoordsY = offerData.location.y - constants.PIN_SIZES.HEIGHT;
+    var pinCoordsX = offerData.location.x - constants.PinSize.WIDTH / 2;
+    var pinCoordsY = offerData.location.y - constants.PinSize.HEIGHT;
 
     pin.style.left = pinCoordsX + 'px';
     pin.style.top = pinCoordsY + 'px';
@@ -50,10 +52,18 @@ window.map = (function () {
     var fragment = document.createDocumentFragment();
 
     offers.forEach(function (offer) {
-      fragment.appendChild(renderPin(offer, pinElement));
+      fragment.appendChild(renderPin(offer, pinNode));
     });
 
-    mapPins.appendChild(fragment);
+    mapPinsNode.appendChild(fragment);
+  };
+
+  var removeActivePinClass = function () {
+    var pin = mapPinsNode.querySelector('.' + ACTIVE_PIN_CLASS);
+
+    if (pin) {
+      pin.classList.remove(ACTIVE_PIN_CLASS);
+    }
   };
 
   var removePins = function (pins) {
@@ -65,7 +75,7 @@ window.map = (function () {
   };
 
   var clearMap = function () {
-    var pins = mapPins.querySelectorAll('.map__pin');
+    var pins = mapPinsNode.querySelectorAll('.map__pin');
 
     removePins(pins);
 
@@ -82,19 +92,19 @@ window.map = (function () {
     renderPins(cutOffers);
   };
 
-  var initMapPinsListeners = function (map, offers) {
-    map.addEventListener('click', function (evt) {
-      var target = evt.target.closest('.map__pin');
+  var onMapPinsClick = function (evt) {
+    var target = evt.target.closest('.map__pin');
 
-      if (!target || !target.hasAttribute('data-id')) {
-        return;
-      }
+    if (!target || !target.hasAttribute('data-id')) {
+      return;
+    }
 
-      var offerId = target.getAttribute('data-id');
-      var activeOffer = offers[offerId];
+    var offerId = target.getAttribute('data-id');
+    var activeOffer = helpers.getItemById(localOffers, offerId);
 
-      window.card.open(activeOffer);
-    });
+    window.card.open(activeOffer);
+
+    target.classList.add(ACTIVE_PIN_CLASS);
   };
 
   var onLoadOfferSuccess = function (offers) {
@@ -105,7 +115,7 @@ window.map = (function () {
 
     updatePins();
 
-    initMapPinsListeners(mapPins, truthOffers);
+    mapPinsNode.addEventListener('click', onMapPinsClick);
 
     window.filter.toggleStatus(true);
   };
@@ -115,12 +125,14 @@ window.map = (function () {
   };
 
   var toggleMapStatus = function (isActive) {
-    mainMap.classList.toggle('map--faded');
+    mainMapNode.classList.toggle('map--faded');
 
     if (isActive) {
       window.api.getOffers(onLoadOfferSuccess, onLoadOfferFailure);
     } else {
       clearMap();
+
+      mapPinsNode.removeEventListener('click', onMapPinsClick);
 
       window.filter.toggleStatus(isActive);
     }
@@ -130,9 +142,10 @@ window.map = (function () {
     window.filter.init();
   };
 
-  return {
+  window.map = {
     init: initMap,
     toggleStatus: toggleMapStatus,
-    updatePins: updatePins
+    updatePins: updatePins,
+    removeActivePinClass: removeActivePinClass
   };
 })();

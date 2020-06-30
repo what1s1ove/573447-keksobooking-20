@@ -1,17 +1,17 @@
 'use strict';
 
-window.filter = (function () {
+(function () {
   var DEBOUNCE_INTERVAL = 500;
   var CONTROL_DEFAULT_VALUE = 'any';
 
   var helpers = window.helpers;
-  var filter = document.querySelector('.map__filters');
-  var filterFormElements = filter.querySelectorAll('select, fieldset');
-  var typeControl = filter.querySelector('#housing-type');
-  var priceControl = filter.querySelector('#housing-price');
-  var roomsControl = filter.querySelector('#housing-rooms');
-  var guestsControl = filter.querySelector('#housing-guests');
-  var featuresFieldset = filter.querySelector('#housing-features');
+  var filterNode = document.querySelector('.map__filters');
+  var filterNodes = filterNode.querySelectorAll('select, fieldset');
+  var typeControlNode = filterNode.querySelector('#housing-type');
+  var priceControlNode = filterNode.querySelector('#housing-price');
+  var roomsControlNode = filterNode.querySelector('#housing-rooms');
+  var guestsControlNode = filterNode.querySelector('#housing-guests');
+  var featuresFieldsetNode = filterNode.querySelector('#housing-features');
   var cleanUpFilter = null;
 
   var priceRangeMap = {
@@ -37,29 +37,29 @@ window.filter = (function () {
 
   var offerFilterValidations = {
     checkType: function (offer) {
-      var isSuitable = checkControlInterrelation(typeControl, offer.type === typeControl.value);
+      var isSuitable = checkControlInterrelation(typeControlNode, offer.type === typeControlNode.value);
 
       return isSuitable;
     },
     checkPrice: function (offer) {
-      var controlValue = priceControl.value;
+      var controlValue = priceControlNode.value;
       var filteringPrice = priceRangeMap[controlValue];
       var isSuitable = controlValue === CONTROL_DEFAULT_VALUE || offer.price >= filteringPrice.MIN && offer.price <= filteringPrice.MAX;
 
       return isSuitable;
     },
     checkRooms: function (offer) {
-      var isSuitable = checkControlInterrelation(roomsControl, offer.rooms === Number(roomsControl.value));
+      var isSuitable = checkControlInterrelation(roomsControlNode, offer.rooms === Number(roomsControlNode.value));
 
       return isSuitable;
     },
     checkGuests: function (offer) {
-      var isSuitable = checkControlInterrelation(guestsControl, offer.guests === Number(guestsControl.value));
+      var isSuitable = checkControlInterrelation(guestsControlNode, offer.guests === Number(guestsControlNode.value));
 
       return isSuitable;
     },
     checkFeatures: function (offer) {
-      var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
+      var checkedFeatures = featuresFieldsetNode.querySelectorAll('input:checked');
       var isSuitable = Array.from(checkedFeatures).every(function (checkbox) {
         return offer.features.includes(checkbox.value);
       });
@@ -87,30 +87,30 @@ window.filter = (function () {
   }, DEBOUNCE_INTERVAL);
 
   var initFormListeners = function () {
-    filter.addEventListener('change', onChangeForm);
+    filterNode.addEventListener('change', onChangeForm);
 
     return function () {
-      filter.removeEventListener('change', onChangeForm);
+      filterNode.removeEventListener('change', onChangeForm);
     };
   };
 
   var toggleFilterStatus = function (isActive) {
-    helpers.toggleElementsDisabled(filterFormElements, !isActive);
+    helpers.toggleNodesDisabled(filterNodes, !isActive);
 
     if (isActive) {
       cleanUpFilter = initFormListeners();
     } else {
       cleanUpFilter();
 
-      filter.reset();
+      filterNode.reset();
     }
   };
 
   var initFilter = function () {
-    helpers.toggleElementsDisabled(filterFormElements, true);
+    helpers.toggleNodesDisabled(filterNodes, true);
   };
 
-  return {
+  window.filter = {
     init: initFilter,
     toggleStatus: toggleFilterStatus,
     getFilteredOffers: getFilteredOffers

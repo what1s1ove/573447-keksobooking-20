@@ -1,14 +1,14 @@
 'use strict';
 
-window.pin = (function () {
+(function () {
   var constants = window.common;
   var helpers = window.helpers;
-  var mainPin = document.querySelector('.map__pin--main');
+  var mainPinNode = document.querySelector('.map__pin--main');
   var cleanUpMainPin = null;
 
   var pinInitCoords = {
-    x: mainPin.offsetLeft,
-    y: mainPin.offsetTop,
+    x: mainPinNode.offsetLeft,
+    y: mainPinNode.offsetTop,
   };
 
   var activeApp = function () {
@@ -16,10 +16,10 @@ window.pin = (function () {
   };
 
   var setDefaultCoords = function () {
-    mainPin.style.top = pinInitCoords.y + 'px';
-    mainPin.style.left = pinInitCoords.x + 'px';
+    mainPinNode.style.top = pinInitCoords.y + 'px';
+    mainPinNode.style.left = pinInitCoords.x + 'px';
 
-    window.form.setAddressCoords(pinInitCoords.x + (mainPin.offsetWidth / 2), pinInitCoords.y + (mainPin.offsetHeight / 2));
+    window.form.setAddressCoords(pinInitCoords.x + (mainPinNode.offsetWidth / 2), pinInitCoords.y + (mainPinNode.offsetHeight / 2));
   };
 
   var onPinFirstClick = function (evt) {
@@ -38,67 +38,75 @@ window.pin = (function () {
       y: downEvt.clientY
     };
 
-    var onMouseTrack = function (moveEvt) {
-      moveEvt.preventDefault();
+    var trackMouse = function (evt) {
+      evt.preventDefault();
 
       var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+        x: startCoords.x - evt.clientX,
+        y: startCoords.y - evt.clientY
       };
 
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: evt.clientX,
+        y: evt.clientY
       };
 
       var mainPinPosition = {
-        x: mainPin.offsetLeft - shift.x,
-        y: mainPin.offsetTop - shift.y
+        x: mainPinNode.offsetLeft - shift.x,
+        y: mainPinNode.offsetTop - shift.y
       };
 
       var Border = {
-        TOP: constants.ADS_LOCATION_COORDS.Y.MIN - constants.MARKER_SIZES.HEIGHT,
-        BOTTOM: constants.ADS_LOCATION_COORDS.Y.MAX - constants.MARKER_SIZES.HEIGHT,
-        LEFT: constants.ADS_LOCATION_COORDS.X.MIN - (constants.MARKER_SIZES.WIDTH / 2),
-        RIGHT: constants.ADS_LOCATION_COORDS.X.MAX - (constants.MARKER_SIZES.WIDTH / 2)
+        TOP: constants.AdsLocationCoord.Y.MIN - constants.MarkerSize.HEIGHT,
+        BOTTOM: constants.AdsLocationCoord.Y.MAX - constants.MarkerSize.HEIGHT,
+        LEFT: constants.AdsLocationCoord.X.MIN - (constants.MarkerSize.WIDTH / 2),
+        RIGHT: constants.AdsLocationCoord.X.MAX - (constants.MarkerSize.WIDTH / 2)
       };
 
       if (mainPinPosition.x >= Border.LEFT && mainPinPosition.x <= Border.RIGHT) {
-        mainPin.style.left = mainPinPosition.x + 'px';
+        mainPinNode.style.left = mainPinPosition.x + 'px';
       }
 
       if (mainPinPosition.y >= Border.TOP && mainPinPosition.y <= Border.BOTTOM) {
-        mainPin.style.top = mainPinPosition.y + 'px';
+        mainPinNode.style.top = mainPinPosition.y + 'px';
       }
 
       var pinCoords = {
-        x: mainPinPosition.x + (constants.MARKER_SIZES.WIDTH / 2),
-        y: mainPinPosition.y + constants.MARKER_SIZES.HEIGHT
+        x: mainPinPosition.x + (constants.MarkerSize.WIDTH / 2),
+        y: mainPinPosition.y + constants.MarkerSize.HEIGHT
       };
 
       window.form.setAddressCoords(pinCoords.x, pinCoords.y);
     };
 
+    var onMouseTrackMove = function (moveEvt) {
+      trackMouse(moveEvt);
+    };
+
+    var onMouseTrackUp = function (upEvt) {
+      trackMouse(upEvt);
+    };
+
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', onMouseTrack);
-      document.removeEventListener('mouseup', onMouseTrack);
+      document.removeEventListener('mousemove', onMouseTrackMove);
+      document.removeEventListener('mouseup', onMouseTrackUp);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseTrack);
-    document.addEventListener('mouseup', onMouseTrack);
+    document.addEventListener('mousemove', onMouseTrackMove);
+    document.addEventListener('mouseup', onMouseTrackUp);
     document.addEventListener('mouseup', onMouseUp);
   };
 
   var setPinInitListeners = function () {
-    mainPin.addEventListener('mousedown', onPinFirstClick);
-    mainPin.addEventListener('keydown', onPinEnterPress);
+    mainPinNode.addEventListener('mousedown', onPinFirstClick);
+    mainPinNode.addEventListener('keydown', onPinEnterPress);
 
     return function () {
-      mainPin.removeEventListener('mousedown', onPinFirstClick);
-      mainPin.removeEventListener('keydown', onPinEnterPress);
+      mainPinNode.removeEventListener('mousedown', onPinFirstClick);
+      mainPinNode.removeEventListener('keydown', onPinEnterPress);
     };
   };
 
@@ -113,14 +121,14 @@ window.pin = (function () {
   };
 
   var initPin = function () {
-    mainPin.addEventListener('mousedown', onMainPinMouseDown);
+    mainPinNode.addEventListener('mousedown', onMainPinMouseDown);
 
     cleanUpMainPin = setPinInitListeners();
 
     setDefaultCoords();
   };
 
-  return {
+  window.pin = {
     init: initPin,
     toggleStatus: togglePinStatus
   };

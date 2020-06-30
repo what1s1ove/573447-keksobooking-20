@@ -1,37 +1,20 @@
 'use strict';
 
-window.helpers = (function () {
+(function () {
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
   var MAIN_MOUSE_BTN_KEY = 0;
 
-  var getShuffledArray = function (arr) {
-    var copiedArray = arr.slice();
-
-    var shuffledArray = copiedArray.sort(function () {
-
-      return 0.5 - Math.random();
+  var getItemById = function (arr, id) {
+    var itemById = arr.find(function (it) {
+      return it.id === id;
     });
 
-    return shuffledArray;
+    return itemById;
   };
 
-  var getRandomNumber = function (min, max) {
-    var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    return randomNumber;
-  };
-
-  var getRandomItems = function (arr) {
-    var randomIndex = getRandomNumber(0, arr.length);
-
-    var shuffledArray = getShuffledArray(arr);
-
-    return shuffledArray.splice(0, randomIndex);
-  };
-
-  var toggleElementsDisabled = function (elements, isDisabled) {
-    elements.forEach(function (it) {
+  var toggleNodesDisabled = function (nodes, isDisabled) {
+    nodes.forEach(function (it) {
       it.disabled = isDisabled;
     });
   };
@@ -54,6 +37,17 @@ window.helpers = (function () {
     }
   };
 
+  var setImagePreview = function (control, imgPreview) {
+    var file = control.files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener('load', function () {
+      imgPreview.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+  };
+
   var debounce = function (cb, interval) {
     var lastTimeout = null;
 
@@ -70,14 +64,13 @@ window.helpers = (function () {
     };
   };
 
-  return {
-    getShuffledArray: getShuffledArray,
-    getRandomNumber: getRandomNumber,
-    getRandomItems: getRandomItems,
-    toggleElementsDisabled: toggleElementsDisabled,
+  window.helpers = {
+    getItemById: getItemById,
+    toggleNodesDisabled: toggleNodesDisabled,
     checkIsEscEvent: checkIsEscEvent,
     checkIsEnterEvent: checkIsEnterEvent,
     checkIsMainMouseBtnEvent: checkIsMainMouseBtnEvent,
+    setImagePreview: setImagePreview,
     debounce: debounce
   };
 })();

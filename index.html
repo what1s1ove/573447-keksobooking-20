@@ -202,7 +202,7 @@
                   type="file"
                   id="avatar"
                   name="avatar"
-                  class="ad-form-header__input visually-hidden"
+                  class="ad-form-header__input"
                   accept=".jpg, .jpeg, .png, .svg"
                 />
                 <label class="ad-form-header__drop-zone" for="avatar"
@@ -234,7 +234,13 @@
           </fieldset>
           <fieldset class="ad-form__element ad-form__element--wide">
             <label class="ad-form__label" for="address">Адрес</label>
-            <input id="address" name="address" type="text" readonly />
+            <input
+              id="address"
+              name="address"
+              type="text"
+              readonly
+              tabindex="-1"
+            />
           </fieldset>
           <fieldset class="ad-form__element">
             <label class="ad-form__label" for="type">Тип жилья</label>
@@ -377,7 +383,7 @@
                   type="file"
                   id="images"
                   name="images"
-                  class="ad-form__input visually-hidden"
+                  class="ad-form__input"
                   accept=".jpg, .jpeg, .png, .svg"
                 />
                 <label for="images" class="ad-form__drop-zone"
@@ -531,7 +537,6 @@
     <script src="js/helpers.js"></script>
     <script src="js/modals.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/data.js"></script>
     <script src="js/card.js"></script>
     <script src="js/form.js"></script>
     <script src="js/pin.js"></script>
