@@ -38,17 +38,17 @@
       y: downEvt.clientY
     };
 
-    var onMouseTrack = function (moveEvt) {
-      moveEvt.preventDefault();
+    var trackMouse = function (evt) {
+      evt.preventDefault();
 
       var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+        x: startCoords.x - evt.clientX,
+        y: startCoords.y - evt.clientY
       };
 
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: evt.clientX,
+        y: evt.clientY
       };
 
       var mainPinPosition = {
@@ -79,16 +79,24 @@
       window.form.setAddressCoords(pinCoords.x, pinCoords.y);
     };
 
+    var onMouseTrackMove = function (moveEvt) {
+      trackMouse(moveEvt);
+    };
+
+    var onMouseTrackUp = function (upEvt) {
+      trackMouse(upEvt);
+    };
+
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', onMouseTrack);
-      document.removeEventListener('mouseup', onMouseTrack);
+      document.removeEventListener('mousemove', onMouseTrackMove);
+      document.removeEventListener('mouseup', onMouseTrackUp);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseTrack);
-    document.addEventListener('mouseup', onMouseTrack);
+    document.addEventListener('mousemove', onMouseTrackMove);
+    document.addEventListener('mouseup', onMouseTrackUp);
     document.addEventListener('mouseup', onMouseUp);
   };
 
